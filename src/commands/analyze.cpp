@@ -4,9 +4,11 @@
 #include "jobs/TextUtil.hpp"
 #include "jobs/EmbeddingIndex.hpp"
 #include "emb/MiniLmEmbedder.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -49,24 +51,44 @@ static std::unordered_set<std::string> tokenize_post(const std::string& raw) {
 }
 
 int cmd_analyze(int argc, char** argv) {
-    std::string role     = get_arg(argc, argv, "--role", "");
-    std::string jobs_dir = get_arg(argc, argv, "--jobs", "data/jobs/raw");
-    std::string topk_s   = get_arg(argc, argv, "--topk", "25");
+    std::string role        = get_arg(argc, argv, "--role", "");
+    std::string jobs_dir    = get_arg(argc, argv, "--jobs", "data/jobs/raw");
+    std::string topk_s      = get_arg(argc, argv, "--topk", "25");
 
-    std::string emb_path = get_arg(argc, argv, "--emb", "data/embeddings/jobs.bin");
-    std::string model    = get_arg(argc, argv, "--model", "models/emb/model.onnx");
-    std::string vocab    = get_arg(argc, argv, "--vocab", "models/emb/vocab.txt");
+    std::string emb_path    = get_arg(argc, argv, "--emb", "data/embeddings/jobs.bin");
+    std::string model       = get_arg(argc, argv, "--model", "models/emb/model.onnx");
+    std::string vocab       = get_arg(argc, argv, "--vocab", "models/emb/vocab.txt");
 
-    // rerank knobs (all optional)
-    double alpha = 0.70; // weight on embedding score
-    size_t topn_seed = 10; // how many top hits to learn "role vocab" from
-    size_t topx_tokens = 30; // how many bootstrapped tokens to use
-    size_t bigk_floor = 50; // how many candidates to retrieve before reranking
+    std::string min_score_s = get_arg(argc, argv, "--min_score", "0.30");
+    std::string out_path    = get_arg(argc, argv, "--out", "");
+
+    // rerank knobs (optional; keep as constants for Day 2)
+    const double alpha       = 0.70; // weight on embedding score in combined
+    const size_t topn_seed   = 10;   // learn "role vocab" from top seed hits
+    const size_t topx_tokens = 30;   // how many bootstrapped tokens to use
+    const size_t bigk_floor  = 50;   // retrieve at least this many before reranking
 
     if (role.empty()) {
         std::cerr << "error: missing --role\n";
         return 1;
     }
+
+    double min_score = 0.0;
+    try {
+        min_score = std::stod(min_score_s);
+    } catch (...) {
+        std::cerr << "error: invalid --min_score\n";
+        return 1;
+    }
+
+    size_t topk = 0;
+    try {
+        topk = (size_t)std::stoul(topk_s);
+    } catch (...) {
+        std::cerr << "error: invalid --topk\n";
+        return 1;
+    }
+    if (topk == 0) topk = 1;
 
     JobCorpus corpus = JobCorpus::load_from_dir(jobs_dir);
 
@@ -88,9 +110,7 @@ int cmd_analyze(int argc, char** argv) {
 
     for (const auto& p : corpus.postings()) {
         auto s = tokenize_post(p.raw_text);
-        for (const auto& tok : s) {
-            df[tok] += 1;
-        }
+        for (const auto& tok : s) df[tok] += 1;
         post_tokens.emplace(p.id, std::move(s));
     }
 
@@ -115,33 +135,46 @@ int cmd_analyze(int argc, char** argv) {
         return 1;
     }
 
-    size_t topk = (size_t)std::stoul(topk_s);
-
     // Step 1: get a bigger candidate set than requested so reranking has room
     size_t bigk = std::max(topk, bigk_floor);
     auto hits = idx.topk(q, bigk);
 
+    std::cout << "TOPK: " << hits.size() << "\n";
+
     if (hits.empty()) {
-        std::cout << "TOPK: 0\n";
+        std::cout << "KEPT: 0 (min_score=" << min_score << ")\n";
         return 0;
     }
 
-    // Step 2: learn "role vocabulary" from top seed hits, weighted by IDF
-    const size_t M = corpus.postings().size();
-    topn_seed = std::min(topn_seed, hits.size());
+    // Apply minimum embedding score filter for candidates
+    std::vector<decltype(hits)::value_type> kept;
+    kept.reserve(hits.size());
+    for (const auto& h : hits) {
+        if (h.score >= min_score) kept.push_back(h);
+    }
 
-    std::unordered_map<std::string, int> tf_top;
-    tf_top.reserve(1024);
+    std::cout << "KEPT: " << kept.size() << " (min_score=" << min_score << ")\n";
+
+    if (kept.empty()) {
+        // Nothing passes threshold; done.
+        return 0;
+    }
+
+    // Step 2: learn "role vocabulary" from top seed kept hits, weighted by IDF
+    const size_t M = corpus.postings().size();
 
     auto idf = [&](const std::string& tok) -> double {
         auto it = df.find(tok);
         int d = (it == df.end()) ? 0 : it->second;
-        // smoothed IDF
         return std::log((1.0 + (double)M) / (1.0 + (double)d));
     };
 
-    for (size_t i = 0; i < topn_seed; ++i) {
-        const auto& h = hits[i];
+    const size_t seedN = std::min(topn_seed, kept.size());
+    std::unordered_map<std::string, int> tf_top;
+    tf_top.reserve(1024);
+
+    for (size_t i = 0; i < seedN; ++i) {
+        const auto& h = kept[i];
         auto pt_it = post_tokens.find(h.job_id);
         if (pt_it == post_tokens.end()) continue;
         for (const auto& tok : pt_it->second) {
@@ -155,8 +188,6 @@ int cmd_analyze(int argc, char** argv) {
     scored.reserve(tf_top.size());
 
     for (const auto& kv : tf_top) {
-        // ignore ultra-common junk and extremely rare singletons if you want,
-        // but we keep it simple and let IDF handle it.
         double s = (double)kv.second * idf(kv.first);
         if (s > 0.0) scored.push_back({kv.first, s});
     }
@@ -179,9 +210,9 @@ int cmd_analyze(int argc, char** argv) {
     };
 
     std::vector<RankedHit> ranked;
-    ranked.reserve(hits.size());
+    ranked.reserve(kept.size());
 
-    for (const auto& h : hits) {
+    for (const auto& h : kept) {
         auto pt_it = post_tokens.find(h.job_id);
         if (pt_it == post_tokens.end()) continue;
 
@@ -206,6 +237,18 @@ int cmd_analyze(int argc, char** argv) {
 
     RequirementExtractor ex;
 
+    // Optional: write JSON-ish output without adding a JSON dep in Day 2.
+    // (If you want real JSON, wire nlohmann::json in this file later.)
+    std::ofstream out;
+    bool write_out = !out_path.empty();
+    if (write_out) {
+        out.open(out_path);
+        if (!out) {
+            std::cerr << "warning: failed to open --out path: " << out_path << "\n";
+            write_out = false;
+        }
+    }
+
     for (size_t i = 0; i < ranked.size(); ++i) {
         const auto& rh = ranked[i];
         auto it = by_id.find(rh.job_id);
@@ -219,6 +262,27 @@ int cmd_analyze(int argc, char** argv) {
 
         auto reqs = ex.extract(it->second->raw_text);
         print_reqs(it->second->id, reqs);
+
+        if (write_out) {
+            out << "job_id=" << rh.job_id
+                << " combined=" << rh.combined
+                << " emb=" << rh.emb_score
+                << " lex=" << rh.lex_score << "\n";
+            for (const auto& [cat, items] : reqs.by_category) {
+                if (items.empty()) continue;
+                out << "  " << cat << ": ";
+                for (size_t j = 0; j < items.size(); ++j) {
+                    if (j) out << ", ";
+                    out << items[j];
+                }
+                out << "\n";
+            }
+            out << "\n";
+        }
+    }
+
+    if (write_out) {
+        std::cout << "\nWROTE: " << out_path << "\n";
     }
 
     return 0;
