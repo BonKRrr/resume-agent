@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:82765c7de03d744083b8e17ef454dca5b8d50ad38867f9178f1fdab3f062fecb
-size 476
+#pragma once
+#include <string>
+#include <vector>
+
+namespace textutil {
+
+// lowercase, keep letters/digits/+/#, turn everything else into spaces, collapse spaces
+std::string normalize(const std::string& s);
+
+// split normalized text into tokens, drop very short junk tokens
+std::vector<std::string> tokenize(const std::string& normalized);
+
+// synonym folding + phrase merging
+std::vector<std::string> normalize_tokens(const std::vector<std::string>& tokens);
+
+}

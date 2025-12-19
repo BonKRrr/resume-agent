@@ -1,3 +1,46 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:64a71f18c4a78c9b83c2438a421d4d146b49f7d8475189d66082381b2a7d2dd8
-size 4791
+About the job
+At CN, we are committed to our pursuit of excellence. We take pride in delivering work of the highest standard, continually innovating to shape the railroad of the future. As responsible railroaders, we make the right decisions every time, putting safety first, acting with unwavering integrity, and holding ourselves accountable for our actions. We believe in succeeding together—by fostering inclusivity and collaboration, we sustainably deliver exceptional results for our customers.
+
+We welcome students aboard to join our team and play a valuable role in the engine that keeps the North American economy on track. Expect an exciting environment where you’ll be encouraged to learn, grow, and be recognized for your unique ideas and contributions. Work on pivotal projects with experienced collaborators who will encourage you to share your perspectives, and thrive in our close-knit, safety-focused culture. The careers we offer are meaningful because the work we do matters. Join us and get your career moving!
+
+ Intern, Engineering Analyst (Technology) 
+
+This is a full-time summer internship lasting from May 11, 2026, until August 28, 2026.
+
+Job Summary
+
+The Intern, Engineering Analyst (Technology) will have the opportunity to gain valuable experience in the both the field of railway engineering and the technology supporting the daily tasks. The intern will support the manager in developing and implementing system requirements, supporting end users, and defining procedures that ensure optimal performance and compliance of CN's engineering technology. The intern will also collaborate with other departments and stakeholders to gain a rounded experience of railway engineering.
+
+Major Responsibilities
+
+ Participate in the agile project management delivery for new requirements of the major engineering systems 
+ Define and test requirements identified by the business to facilitate capital planning decisions 
+ Prepare reports and presentations aimed to increase the usability of the system and help management make sound business decisions 
+ Participate in field inspections and audits of track infrastructure to learn about the potential rail conditions and gain practical experience 
+ Support the manager in conducting root cause analysis and corrective actions for rail failures and incidents 
+ Participate in cross-functional meetings and workshops with internal and external stakeholders to share knowledge and feedback 
+ Conduct trend analysis on engineering data 
+
+Requirements
+
+ Knowledge of Microsoft Office (Word, Excel, and PowerPoint) 
+ Collaborates with others and shares information 
+ Applies critical thinking 
+ Identifies potential safety and security risks 
+ Demonstrates active listening 
+ Ability to work occasionally in the evening 
+ Valid Driver’s Licence 
+
+ Education 
+
+ Working towards a Bachelor’s Degree in Civil Engineering, Mechanical Engineering Construction Management, Computer Science, Business or Information Technology 
+
+About CN
+
+CN is a premium railroad that sustainably generates value for our customers, shareholders, employees, and stakeholders with an unwavering commitment to safety and service. Essential to the economy, to the customers, and to the communities it serves, CN safely transports more than 300 million tons of natural resources, manufactured products, and finished goods throughout North America every year. CN's network connects Canada's Eastern and Western coasts with the U.S. South through a 20,000-mile rail network. CN and its affiliates have been contributing to community prosperity and sustainable trade since 1919. CN powers the North American economy and is committed to programs supporting social responsibility and environmental stewardship.
+
+At CN, we are dedicated to building North America's safest , most inclusive and sustainable railroad, which includes reflecting the communities in which we operate. Research shows that candidates often don't apply unless they feel they fit the job posting at 100%. To all potential applicants, even if you don't meet every job requirement listed in a posting, we still encourage you to apply. If you require an accommodation for the recruitment process (including alternate formats of materials, accessible meeting rooms or other accommodations), please get in touch with our team at cnrecruitment@cn.ca .
+
+As an equal opportunity employer, qualified candidates will receive consideration for employment without regard to race, color, religion, sex, sexual orientation, gender identity, national origin, disability, protected veteran status, and other protected status as required by applicable law.
+
+Please monitor your email on a regular basis as communication to applicants is done via email.

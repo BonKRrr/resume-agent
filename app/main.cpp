@@ -1,3 +1,33 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f8a8d245cc432ea21a268a3ab55eff4f4e8a804ba99efd00e97582f8cc086e86
-size 873
+#include "commands/ResumeDump.hpp"
+#include "commands/analyze.hpp"
+#include "commands/embed.hpp"
+#include <iostream>
+#include <string>
+
+int main(int argc, char** argv) {
+    if (argc < 3) {
+        std::cerr << "usage:\n"
+                  << "  resume-agent resume dump [path]\n";
+        return 1;
+    }
+
+    std::string cmd = argv[1];
+    std::string sub1 = argv[2];
+
+    // Default path if not provided
+    std::string path = (argc >= 4) ? argv[3] : "data/abstract_resume.json";
+
+    if (cmd == "resume" && sub1 == "dump") {
+        return resumeDump(path);
+    }
+    if (argc >= 2 && std::string(argv[1]) == "analyze") {
+        return cmd_analyze(argc - 1, argv + 1);
+    }
+    if (argc >= 2 && std::string(argv[1]) == "embed") {
+    return cmd_embed(argc - 1, argv + 1);
+    }
+
+
+    std::cerr << "unknown command\n";
+    return 1;
+}

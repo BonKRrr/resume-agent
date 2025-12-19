@@ -1,3 +1,105 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:bfd439969597d1b7a11a46e28edb57eb7cee4fe211bd5146101c6f5f29c02f4d
-size 3932
+{
+  "experiences": [
+    {
+      "id": "exp_competitions",
+      "title": "Mathematics and Coding Competitions",
+      "organization": "Purple Comet / Euclid / CCC",
+      "dates": "Jul 2018 - Apr 2024",
+      "bullets": [
+        {
+          "id": "b_comp_team_lead",
+          "text": "Led and coordinated a team of 6 students to solve challenging problems, achieving third place in Canada.",
+          "tags": ["leadership", "teamwork", "mathematics", "problem-solving"]
+        },
+        {
+          "id": "b_comp_euclid_96",
+          "text": "Scored 96/100 on Euclid 2024 (Provincial Champion, Honour Roll).",
+          "tags": ["mathematics", "achievement"]
+        },
+        {
+          "id": "b_comp_ccc_honour",
+          "text": "Earned CCC Junior National Honour Roll using Python and C++.",
+          "tags": ["C++", "Python", "algorithms", "competitive-programming"]
+        }
+      ]
+    },
+    {
+      "id": "exp_instructor",
+      "title": "Mathematics and Coding Instructor",
+      "organization": "Montreal Education Forum",
+      "dates": "Sep 2019 – May 2021",
+      "bullets": [
+        {
+          "id": "b_inst_teach_math_py",
+          "text": "Provided instruction in mathematics and Python coding to 10+ students online and in-person (group and one-on-one).",
+          "tags": ["teaching", "communication", "Python", "mathematics"]
+        },
+        {
+          "id": "b_inst_schedule",
+          "text": "Managed classroom schedules to fit large amounts of content into a set time frame.",
+          "tags": ["organization", "time-management"]
+        },
+        {
+          "id": "b_inst_amc",
+          "text": "Helped students prepare for AMC competitions by analyzing difficult problems and teaching problem-solving strategies.",
+          "tags": ["mentorship", "mathematics", "competition-prep"]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_dataviz_plotly",
+      "name": "Data Visualization using Python and Plotly",
+      "context": "Marianopolis Data Science Club (Sep 2023 – Apr 2024)",
+      "bullets": [
+        {
+          "id": "b_dataviz_plotly",
+          "text": "Built data visualizations using Python and Plotly to communicate insights from datasets.",
+          "tags": ["Python", "data-analysis", "visualization", "Plotly"]
+        }
+      ]
+    },
+    {
+      "id": "proj_hackathon_clinic_site",
+      "name": "Clinic Appointment Website (Hackathon)",
+      "context": "Collège Jean-de-Brébeuf (Sep 2021 – May 2023)",
+      "bullets": [
+        {
+          "id": "b_clinic_site_html_css",
+          "text": "Designed a website to manage clinic appointments using HTML and CSS; won second place.",
+          "tags": ["HTML", "CSS", "web-development", "hackathon"]
+        }
+      ]
+    },
+    {
+      "id": "proj_wordle_game",
+      "name": "Wordle-style Game",
+      "context": "Collège Jean-de-Brébeuf (Sep 2021 – May 2023)",
+      "bullets": [
+        {
+          "id": "b_wordle_unreal_pygame",
+          "text": "Designed and implemented a Wordle-style game using Unreal Engine 4 and Python (Pygame).",
+          "tags": ["Python", "Unreal Engine", "game-development"]
+        }
+      ]
+    },
+    {
+      "id": "proj_shad_wheelchair",
+      "name": "Wheelchair Stability Accessory",
+      "context": "SHAD 2023 Design Project (Jun 2023)",
+      "bullets": [
+        {
+          "id": "b_shad_team_design",
+          "text": "Designed a wheelchair accessory to enhance safety by improving stability while parked in a team of 6.",
+          "tags": ["teamwork", "engineering-design", "problem-solving"]
+        },
+        {
+          "id": "b_shad_blender",
+          "text": "Created Blender visualizations to showcase the mechanics of the device.",
+          "tags": ["Blender", "visualization", "3D"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,9 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3f2080c6fbeaace02b72b0da950785d3bd710bf66580aff364c33af87c935195
-size 251
+#pragma once
+#include <string>
+#include <vector>
+
+struct JobPosting {
+    std::string id;        // filename stem, e.g., "001"
+    std::string title;     // optional for now; can leave empty
+    std::string raw_text;  // full posting text
+};

@@ -1,3 +1,36 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:02cb98d22e4bfc6d02ae08e4563bec641585d5e3d576707f384e9aa0632424fb
-size 893
+{
+  "experiences": [
+    {
+      "id": "exp_1",
+      "title": "Software Developer Intern",
+      "organization": "Company X",
+      "dates": "2024",
+      "bullets": [
+        {
+          "id": "b1",
+          "text": "Developed multithreaded C++ services for backend processing.",
+          "tags": ["C++", "backend", "multithreading"]
+        },
+        {
+          "id": "b2",
+          "text": "Wrote unit tests and improved system reliability.",
+          "tags": ["testing", "C++"]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_1",
+      "name": "Resume Agent",
+      "context": "personal",
+      "bullets": [
+        {
+          "id": "b3",
+          "text": "Designed a C++ pipeline to analyze job postings and generate role-specific resumes.",
+          "tags": ["C++", "data-analysis", "NLP"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,19 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e2f658eeace78d79a8df82f233dcdeea135db498a77766156054bfc0d1d06c21
-size 416
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#include "onnxruntime_c_api.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * \param use_arena zero: false. non-zero: true.
+ */
+ORT_EXPORT
+ORT_API_STATUS(OrtSessionOptionsAppendExecutionProvider_CPU, _In_ OrtSessionOptions* options, int use_arena)
+ORT_ALL_ARGS_NONNULL;
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:82dff05054cbc5964a25e438a044bd278de1b975d0086534e6948170c6e886f4
-size 317
+#pragma once
+#include "jobs/JobPosting.hpp"
+#include <string>
+#include <vector>
+
+class JobCorpus {
+public:
+    static JobCorpus load_from_dir(const std::string& dir); // loads *.txt
+    const std::vector<JobPosting>& postings() const { return m_posts; }
+
+private:
+    std::vector<JobPosting> m_posts;
+};

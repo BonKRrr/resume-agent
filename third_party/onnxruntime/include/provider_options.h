@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:74f8accd5b30fbfe8abb24ca279e634657b446bf5b9be520badaaebcea63cade
-size 498
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#pragma once
+
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+namespace onnxruntime {
+
+// data types for execution provider options
+
+using ProviderOptions = std::unordered_map<std::string, std::string>;
+using ProviderOptionsVector = std::vector<ProviderOptions>;
+using ProviderOptionsMap = std::unordered_map<std::string, ProviderOptions>;
+
+}  // namespace onnxruntime
