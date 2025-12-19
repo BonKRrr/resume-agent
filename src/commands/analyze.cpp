@@ -4,18 +4,27 @@
 #include "jobs/TextUtil.hpp"
 #include "jobs/EmbeddingIndex.hpp"
 #include "emb/MiniLmEmbedder.hpp"
+#include "llm/LLMClient.hpp"
 
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
 namespace fs = std::filesystem;
+
+static bool has_flag(int argc, char** argv, const std::string& key) {
+    for (int i = 0; i < argc; ++i) {
+        if (std::string(argv[i]) == key) return true;
+    }
+    return false;
+}
 
 static std::string get_arg(int argc, char** argv, const std::string& key, const std::string& def) {
     for (int i = 0; i + 1 < argc; ++i) {
@@ -81,6 +90,175 @@ static void print_reqs(Printer& pr, const std::string& id, const ExtractedReqs& 
     }
 }
 
+// ---------- Day 3: RoleProfile scaffolding ----------
+
+static std::string to_lower_ascii(std::string s) {
+    for (char& c : s) {
+        if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
+    }
+    return s;
+}
+
+static std::string trim_ascii(const std::string& s) {
+    size_t i = 0;
+    while (i < s.size() && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n' || s[i] == '\r')) ++i;
+    size_t j = s.size();
+    while (j > i && (s[j - 1] == ' ' || s[j - 1] == '\t' || s[j - 1] == '\n' || s[j - 1] == '\r')) --j;
+    return s.substr(i, j - i);
+}
+
+static std::string canonicalize_skill(const std::string& raw) {
+    // Minimal canonicalization for Day 3; expand later.
+    std::string s = trim_ascii(raw);
+    s = to_lower_ascii(s);
+
+    // common quick aliases
+    if (s == "c++17" || s == "c++20" || s == "c++14" || s == "c++11") return "c++";
+    if (s == "cpp") return "c++";
+    if (s == "js") return "javascript";
+    if (s == "ts") return "typescript";
+    if (s == "py") return "python";
+
+    return s;
+}
+
+static double span_weight_from_category(const std::string& cat) {
+    // For now, categories from RequirementExtractor are treated as "requirement-ish".
+    // You can refine later once you add real span typing from LLM segmentation.
+    (void)cat;
+    return 1.0;
+}
+
+static std::string json_escape(const std::string& s) {
+    std::ostringstream oss;
+    for (char c : s) {
+        switch (c) {
+            case '\\': oss << "\\\\"; break;
+            case '"':  oss << "\\\""; break;
+            case '\n': oss << "\\n";  break;
+            case '\r': oss << "\\r";  break;
+            case '\t': oss << "\\t";  break;
+            default:
+                if ((unsigned char)c < 0x20) {
+                    oss << "\\u";
+                    const char* hex = "0123456789abcdef";
+                    oss << "00" << hex[(c >> 4) & 0xF] << hex[c & 0xF];
+                } else {
+                    oss << c;
+                }
+        }
+    }
+    return oss.str();
+}
+
+struct Mention {
+    std::string posting_id;
+    std::string category;
+    std::string raw;
+    std::string canonical;
+    std::string strength;   // "must"|"should"|"nice"|"unknown" (Day 3 placeholder)
+    std::string polarity;   // "positive"|"negated" (Day 3 placeholder)
+    double confidence;      // 0..1
+    double contrib;         // for weighting
+};
+
+struct SkillAgg {
+    int raw_count = 0;      // number of postings where present
+    double sum_contrib = 0.0;
+    std::vector<std::string> evidence; // small sample of raw mentions
+};
+
+static bool ensure_dir(const fs::path& p) {
+    try {
+        if (p.empty()) return true;
+        fs::create_directories(p);
+        return true;
+    } catch (...) {
+        return false;
+    }
+}
+
+static void write_mentions_jsonl(const fs::path& path, const std::vector<Mention>& mentions) {
+    std::ofstream f(path, std::ios::out | std::ios::trunc);
+    if (!f) return;
+
+    for (const auto& m : mentions) {
+        f << "{"
+          << "\"posting_id\":\"" << json_escape(m.posting_id) << "\","
+          << "\"category\":\""   << json_escape(m.category) << "\","
+          << "\"raw\":\""        << json_escape(m.raw) << "\","
+          << "\"canonical\":\""  << json_escape(m.canonical) << "\","
+          << "\"strength\":\""   << json_escape(m.strength) << "\","
+          << "\"polarity\":\""   << json_escape(m.polarity) << "\","
+          << "\"confidence\":"   << m.confidence << ","
+          << "\"contrib\":"      << m.contrib
+          << "}\n";
+    }
+}
+
+static void write_profile_json(
+    const fs::path& path,
+    const std::string& role,
+    int num_postings,
+    const std::vector<std::pair<std::string, double>>& weights_sorted,
+    const std::vector<std::string>& core,
+    const std::vector<std::string>& secondary,
+    const std::vector<std::string>& nice,
+    const std::unordered_map<std::string, SkillAgg>& agg
+) {
+    std::ofstream f(path, std::ios::out | std::ios::trunc);
+    if (!f) return;
+
+    f << "{\n";
+    f << "  \"role\": \"" << json_escape(role) << "\",\n";
+    f << "  \"num_postings\": " << num_postings << ",\n";
+
+    auto write_str_array = [&](const char* key, const std::vector<std::string>& arr) {
+        f << "  \"" << key << "\": [";
+        for (size_t i = 0; i < arr.size(); ++i) {
+            if (i) f << ", ";
+            f << "\"" << json_escape(arr[i]) << "\"";
+        }
+        f << "],\n";
+    };
+
+    write_str_array("core_skills", core);
+    write_str_array("secondary_skills", secondary);
+    write_str_array("nice_to_have", nice);
+
+    f << "  \"skill_weights\": {\n";
+    for (size_t i = 0; i < weights_sorted.size(); ++i) {
+        const auto& kv = weights_sorted[i];
+        f << "    \"" << json_escape(kv.first) << "\": " << kv.second;
+        f << (i + 1 < weights_sorted.size() ? ",\n" : "\n");
+    }
+    f << "  },\n";
+
+    // Small evidence samples (optional but nice for explainability)
+    f << "  \"evidence\": {\n";
+    size_t written = 0;
+    for (const auto& kv : weights_sorted) {
+        auto it = agg.find(kv.first);
+        if (it == agg.end()) continue;
+        const auto& ev = it->second.evidence;
+        f << "    \"" << json_escape(kv.first) << "\": [";
+        for (size_t j = 0; j < ev.size(); ++j) {
+            if (j) f << ", ";
+            f << "\"" << json_escape(ev[j]) << "\"";
+        }
+        f << "]";
+        written++;
+        f << (written < weights_sorted.size() ? ",\n" : "\n");
+        // keep file smaller; you can remove this cap later
+        if (written >= 50) break;
+    }
+    f << "  }\n";
+
+    f << "}\n";
+}
+
+// ---------------------------------------------------
+
 int cmd_analyze(int argc, char** argv) {
     std::string role        = get_arg(argc, argv, "--role", "");
     std::string jobs_dir    = get_arg(argc, argv, "--jobs", "data/jobs/raw");
@@ -92,6 +270,11 @@ int cmd_analyze(int argc, char** argv) {
 
     std::string min_score_s = get_arg(argc, argv, "--min_score", "0.30");
     std::string out_path    = get_arg(argc, argv, "--out", "");
+
+    // Day 3 flags
+    bool use_llm   = has_flag(argc, argv, "--llm");
+    bool do_profile = has_flag(argc, argv, "--profile");
+    std::string outdir_s = get_arg(argc, argv, "--outdir", "out");
 
     // rerank knobs (Day 2 constants)
     const double alpha       = 0.70;
@@ -121,7 +304,7 @@ int cmd_analyze(int argc, char** argv) {
     }
     if (topk == 0) topk = 1;
 
-    // Optional file output
+    // Optional file output (existing Day 2 behavior)
     std::ofstream out;
     bool write_out = false;
     if (!out_path.empty()) {
@@ -141,6 +324,15 @@ int cmd_analyze(int argc, char** argv) {
             pr << "OUT: " << fs::absolute(fs::path(out_path)).string() << "\n";
         } catch (...) {
             pr << "OUT: " << out_path << "\n";
+        }
+    }
+
+    // Prepare outdir
+    fs::path outdir(outdir_s);
+    if (do_profile) {
+        if (!ensure_dir(outdir)) {
+            std::cerr << "error: failed to create --outdir: " << outdir_s << "\n";
+            return 1;
         }
     }
 
@@ -283,7 +475,23 @@ int cmd_analyze(int argc, char** argv) {
 
     pr << "TOPK: " << ranked.size() << "\n";
 
+    // LLM slot (Day 3: wired, Null by default)
+    llm::NullLLMClient null_llm;
+    llm::LLMClient* llm_client = use_llm ? (llm::LLMClient*)&null_llm : nullptr;
+    (void)llm_client; // will be used once you implement a real adapter
+
     RequirementExtractor ex;
+
+    // Day 3 aggregation buffers
+    std::vector<Mention> all_mentions;
+    all_mentions.reserve(ranked.size() * 32);
+
+    // skill -> aggregate
+    std::unordered_map<std::string, SkillAgg> agg;
+
+    // presence tracking to ensure "once per posting per skill"
+    std::unordered_map<std::string, std::unordered_map<std::string, Mention>> best_by_posting;
+    best_by_posting.reserve(ranked.size());
 
     for (size_t i = 0; i < ranked.size(); ++i) {
         const auto& rh = ranked[i];
@@ -298,6 +506,107 @@ int cmd_analyze(int argc, char** argv) {
 
         auto reqs = ex.extract(it->second->raw_text);
         print_reqs(pr, it->second->id, reqs);
+
+        if (!do_profile) continue;
+
+        // Convert extracted requirements into mentions
+        for (const auto& [cat, items] : reqs.by_category) {
+            if (items.empty()) continue;
+
+            const double sw = span_weight_from_category(cat);
+            for (const auto& raw_skill : items) {
+                std::string canon = canonicalize_skill(raw_skill);
+                if (canon.empty()) continue;
+
+                Mention m;
+                m.posting_id = it->second->id;
+                m.category   = cat;
+                m.raw        = raw_skill;
+                m.canonical  = canon;
+
+                // Day 3 placeholders until LLM span parsing exists
+                m.strength   = "must";
+                m.polarity   = "positive";
+                m.confidence = 1.0;
+
+                const double strength_w = 1.0; // must
+                m.contrib = sw * strength_w * m.confidence;
+
+                // choose best mention per posting per canonical skill
+                auto& mp = best_by_posting[m.posting_id];
+                auto it2 = mp.find(m.canonical);
+                if (it2 == mp.end() || m.contrib > it2->second.contrib) {
+                    mp[m.canonical] = m;
+                }
+            }
+        }
+    }
+
+    if (do_profile) {
+        // flatten best_by_posting into all_mentions
+        for (auto& pkv : best_by_posting) {
+            for (auto& skv : pkv.second) {
+                all_mentions.push_back(skv.second);
+            }
+        }
+
+        // aggregate
+        for (const auto& m : all_mentions) {
+            if (m.polarity == "negated") continue;
+
+            auto& a = agg[m.canonical];
+            a.raw_count += 1;
+            a.sum_contrib += m.contrib;
+
+            if (a.evidence.size() < 3) {
+                a.evidence.push_back(m.raw);
+            }
+        }
+
+        const int N = (int)ranked.size();
+        // compute weights
+        std::vector<std::pair<std::string, double>> weights;
+        weights.reserve(agg.size());
+
+        std::vector<std::string> core, secondary, nice;
+
+        for (const auto& kv : agg) {
+            const std::string& skill = kv.first;
+            const SkillAgg& a = kv.second;
+
+            double freq = (N > 0) ? ((double)a.raw_count / (double)N) : 0.0;
+            double avg_contrib = (a.raw_count > 0) ? (a.sum_contrib / (double)a.raw_count) : 0.0;
+
+            // simple combined weight (tunable)
+            double w = 0.7 * freq + 0.3 * avg_contrib;
+
+            weights.push_back({skill, w});
+
+            // buckets (tweak later)
+            if (freq >= 0.55 && w >= 0.75) core.push_back(skill);
+            else if (freq >= 0.25 && w >= 0.45) secondary.push_back(skill);
+            else nice.push_back(skill);
+        }
+
+        std::sort(weights.begin(), weights.end(),
+                  [](const auto& a, const auto& b){ return a.second > b.second; });
+
+        auto sort_alpha = [](std::vector<std::string>& v) {
+            std::sort(v.begin(), v.end());
+        };
+        sort_alpha(core);
+        sort_alpha(secondary);
+        sort_alpha(nice);
+
+        // write artifacts
+        fs::path mentions_path = outdir / "mentions.jsonl";
+        fs::path profile_path  = outdir / "profile.json";
+
+        write_mentions_jsonl(mentions_path, all_mentions);
+        write_profile_json(profile_path, role, (int)ranked.size(), weights, core, secondary, nice, agg);
+
+        pr << "\nDAY3: wrote " << mentions_path.string() << "\n";
+        pr << "DAY3: wrote " << profile_path.string() << "\n";
     }
 
     if (write_out) {
