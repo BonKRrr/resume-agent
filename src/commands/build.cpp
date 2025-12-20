@@ -4,10 +4,14 @@
 #include "resume/BulletScoresArtifact.hpp"
 #include "resume/Scorer.hpp"
 #include "resume/SemanticMatcher.hpp"
+#include "resume/Selector.hpp"
+#include "resume/MarkdownRenderer.hpp"
+#include "resume/ExplainabilityArtifact.hpp"
 #include "resume/Models.hpp"
 
 #include "emb/MiniLmEmbedder.hpp"
 
+#include <cctype>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -29,6 +33,18 @@ static std::string get_arg(int argc, char** argv, const std::string& key, const 
         if (std::string(argv[i]) == key) return std::string(argv[i + 1]);
     }
     return def;
+}
+
+static int get_arg_int(int argc, char** argv, const std::string& key, int def) {
+    const std::string s = get_arg(argc, argv, key, "");
+    if (s.empty()) return def;
+    try { return std::stoi(s); } catch (...) { return def; }
+}
+
+static double get_arg_double(int argc, char** argv, const std::string& key, double def) {
+    const std::string s = get_arg(argc, argv, key, "");
+    if (s.empty()) return def;
+    try { return std::stod(s); } catch (...) { return def; }
 }
 
 static nlohmann::json read_json_file(const fs::path& path) {
@@ -77,9 +93,7 @@ static Experience parse_experience(const nlohmann::json& j) {
     e.organization = j.value("organization", "");
     e.dates = j.value("dates", "");
     if (j.contains("bullets") && j["bullets"].is_array()) {
-        for (const auto& bj : j["bullets"]) {
-            e.bullets.push_back(parse_bullet(bj));
-        }
+        for (const auto& bj : j["bullets"]) e.bullets.push_back(parse_bullet(bj));
     }
     return e;
 }
@@ -90,9 +104,7 @@ static Project parse_project(const nlohmann::json& j) {
     p.name = j.value("name", "");
     p.context = j.value("context", "");
     if (j.contains("bullets") && j["bullets"].is_array()) {
-        for (const auto& bj : j["bullets"]) {
-            p.bullets.push_back(parse_bullet(bj));
-        }
+        for (const auto& bj : j["bullets"]) p.bullets.push_back(parse_bullet(bj));
     }
     return p;
 }
@@ -101,15 +113,11 @@ static AbstractResume parse_resume(const nlohmann::json& j) {
     AbstractResume r;
 
     if (j.contains("experiences") && j["experiences"].is_array()) {
-        for (const auto& ej : j["experiences"]) {
-            r.experiences.push_back(parse_experience(ej));
-        }
+        for (const auto& ej : j["experiences"]) r.experiences.push_back(parse_experience(ej));
     }
 
     if (j.contains("projects") && j["projects"].is_array()) {
-        for (const auto& pj : j["projects"]) {
-            r.projects.push_back(parse_project(pj));
-        }
+        for (const auto& pj : j["projects"]) r.projects.push_back(parse_project(pj));
     }
 
     return r;
@@ -128,9 +136,7 @@ static resume::RoleProfileLite parse_profile(const nlohmann::json& j) {
     if (j.contains("skill_weights") && j["skill_weights"].is_object()) {
         for (auto it = j["skill_weights"].begin(); it != j["skill_weights"].end(); ++it) {
             const std::string key = normalize_key(it.key());
-            if (it.value().is_number()) {
-                p.skill_weights[key] = it.value().get<double>();
-            }
+            if (it.value().is_number()) p.skill_weights[key] = it.value().get<double>();
         }
     }
 
@@ -144,13 +150,21 @@ int cmd_build(int argc, char** argv) {
         const fs::path profile_path = get_arg(argc, argv, "--profile", "out/profile.json");
         const fs::path outdir = get_arg(argc, argv, "--outdir", "out");
 
-        // semantic matching flags
+        const bool scores_only = has_flag(argc, argv, "--scores_only");
+
         const bool semantic = has_flag(argc, argv, "--semantic");
-        const std::string emb_model = get_arg(argc, argv, "--emb_model", "");
-        const std::string emb_vocab = get_arg(argc, argv, "--emb_vocab", "");
-        const std::string semantic_threshold_s = get_arg(argc, argv, "--semantic_threshold", "0.66");
-        const std::string semantic_topk_s = get_arg(argc, argv, "--semantic_topk", "1");
+        const std::string emb_model = get_arg(argc, argv, "--emb_model", "models/emb/model.onnx");
+        const std::string emb_vocab = get_arg(argc, argv, "--emb_vocab", "models/emb/vocab.txt");
+        const double semantic_threshold = get_arg_double(argc, argv, "--semantic_threshold", 0.66);
+        const int semantic_topk_i = get_arg_int(argc, argv, "--semantic_topk", 1);
         const std::string semantic_cache = get_arg(argc, argv, "--semantic_cache", "");
+
+        resume::SelectorConfig sel_cfg;
+        sel_cfg.max_total_bullets = get_arg_int(argc, argv, "--max_total_bullets", sel_cfg.max_total_bullets);
+        sel_cfg.max_bullets_per_parent = get_arg_int(argc, argv, "--max_bullets_per_parent", sel_cfg.max_bullets_per_parent);
+        sel_cfg.max_experience_bullets = get_arg_int(argc, argv, "--max_experience_bullets", sel_cfg.max_experience_bullets);
+        sel_cfg.max_project_bullets = get_arg_int(argc, argv, "--max_project_bullets", sel_cfg.max_project_bullets);
+        sel_cfg.min_unique_parents = get_arg_int(argc, argv, "--min_unique_parents", sel_cfg.min_unique_parents);
 
         const nlohmann::json resume_j = read_json_file(resume_path);
         const nlohmann::json profile_j = read_json_file(profile_path);
@@ -160,32 +174,30 @@ int cmd_build(int argc, char** argv) {
 
         const std::string effective_role = !role_arg.empty() ? role_arg : profile.role;
 
-        resume::ScoreConfig cfg;
-        cfg.semantic_enabled = semantic;
-        cfg.semantic_threshold = std::stod(semantic_threshold_s);
+        resume::ScoreConfig score_cfg;
+        score_cfg.semantic_enabled = semantic;
+        score_cfg.semantic_threshold = semantic_threshold;
 
         std::unique_ptr<resume::SemanticMatcher> matcher;
         MiniLmEmbedder embedder;
 
         if (semantic) {
             if (emb_model.empty() || emb_vocab.empty()) {
-                throw std::runtime_error(
-                    "Semantic matching enabled but missing --emb_model and/or --emb_vocab"
-                );
+                throw std::runtime_error("Semantic matching enabled but missing --emb_model and/or --emb_vocab");
             }
             if (!embedder.init(emb_model, emb_vocab)) {
                 throw std::runtime_error("Failed to init MiniLmEmbedder (check model/vocab paths)");
             }
 
             resume::SemanticMatcherConfig mcfg;
-            mcfg.threshold = static_cast<float>(cfg.semantic_threshold);
-            mcfg.topk = static_cast<size_t>(std::stoul(semantic_topk_s));
+            mcfg.threshold = static_cast<float>(score_cfg.semantic_threshold);
+            mcfg.topk = (semantic_topk_i <= 0) ? 1u : static_cast<size_t>(semantic_topk_i);
             mcfg.cache_path = semantic_cache;
 
             matcher = resume::build_profile_semantic_matcher(profile.skill_weights, embedder, mcfg);
         }
 
-        const auto scored = resume::score_bullets(resume, profile, cfg, matcher.get());
+        const auto scored = resume::score_bullets(resume, profile, score_cfg, matcher.get());
 
         int bullet_count = 0;
         for (const auto& e : resume.experiences) bullet_count += static_cast<int>(e.bullets.size());
@@ -198,23 +210,51 @@ int cmd_build(int argc, char** argv) {
         artifact.profile_path = profile_path.string();
         artifact.bullets = scored;
 
-        const fs::path out_path = outdir / "bullet_scores.json";
-        artifact.write_to(out_path);
+        const fs::path scores_path = outdir / "bullet_scores.json";
+        artifact.write_to(scores_path);
 
         std::cout << "ROLE: " << effective_role << "\n";
         std::cout << "RESUME: " << resume_path.string() << "\n";
         std::cout << "PROFILE: " << profile_path.string() << "\n";
-        std::cout << "OUT: " << out_path.string() << "\n";
+        std::cout << "OUT_SCORES: " << scores_path.string() << "\n";
         std::cout << "BULLETS: " << artifact.num_bullets << "\n";
         std::cout << "SEMANTIC: " << (semantic ? "on" : "off") << "\n";
 
         if (semantic) {
             std::cout << "EMB_MODEL: " << emb_model << "\n";
             std::cout << "EMB_VOCAB: " << emb_vocab << "\n";
-            std::cout << "SEM_THRESHOLD: " << cfg.semantic_threshold << "\n";
-            std::cout << "SEM_TOPK: " << semantic_topk_s << "\n";
+            std::cout << "SEM_THRESHOLD: " << score_cfg.semantic_threshold << "\n";
+            std::cout << "SEM_TOPK: " << semantic_topk_i << "\n";
             if (!semantic_cache.empty()) std::cout << "SEM_CACHE: " << semantic_cache << "\n";
         }
+
+        if (scores_only) {
+            return 0;
+        }
+
+        const resume::SelectorResult sel = resume::select_bullets(scored, sel_cfg);
+
+        const resume::ConcreteResume cr = resume::build_concrete_resume(resume, sel.selected);
+        const std::string md = resume::render_markdown(cr);
+
+        const fs::path resume_md_path = outdir / "resume.md";
+        resume::write_markdown(resume_md_path, md);
+
+        resume::ExplainabilityArtifact ex;
+        ex.role = effective_role;
+        ex.resume_path = resume_path.string();
+        ex.profile_path = profile_path.string();
+        ex.score_cfg = score_cfg;
+        ex.selector_cfg = sel_cfg;
+        ex.selected = sel.selected;
+        ex.decisions = sel.decisions;
+
+        const fs::path explain_path = outdir / "explainability.json";
+        ex.write_to(explain_path);
+
+        std::cout << "OUT_RESUME_MD: " << resume_md_path.string() << "\n";
+        std::cout << "OUT_EXPLAIN: " << explain_path.string() << "\n";
+        std::cout << "SELECTED: " << sel.selected.size() << "\n";
 
         return 0;
     } catch (const std::exception& e) {
