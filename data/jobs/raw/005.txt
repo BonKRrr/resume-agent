@@ -1,0 +1,37 @@
+About the job
+Job title: C++ 20/23 Backend Engineer (2-6 Years)
+
+Client: Elite FinTech Firm
+
+Salary: Up to $180k CAD + Bonus
+
+Location: Montreal (Hybrid Working)
+
+Sells: Cutting-edge tech, ownership of multiple greenfield projects, no red tape, gold medal Olympiads, exceptional technologists, option to research and develop your own models, a friendly/collaborative environment, beautiful offices.
+
+
+
+An Elite Tech Firm is looking for a highly talented C++ Software Engineer to join an elite group of individuals
+
+
+
+This team have an unlimited tech budget, promote a great culture and are made up of fantastic like-minded technologists!
+
+
+
+Role:
+
+They’ll find the best team to suit your skillset/interests but you could be working on:
+
+• Some of the world’s most performant ML pipelines that deal with millions of data points every second
+
+• Building software solutions/products with scale, reliability and latency considerations in mind
+
+
+
+Skills:
+
+2-6 years of experience as a C++ Developer
+Strong knowledge of optimization/performance
+An interest in Rust is a nice plus
+Experience working at a large scale scale

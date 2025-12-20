@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <functional>
 
 namespace fs = std::filesystem;
 
@@ -64,6 +65,21 @@ static bool open_out(std::ofstream& out, const std::string& out_path) {
     }
 }
 
+// ---------- tokenize helpers ----------
+
+static std::string to_lower_ascii(std::string s) {
+    for (char& c : s) if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
+    return s;
+}
+
+static std::string trim_ascii(const std::string& s) {
+    size_t i = 0;
+    while (i < s.size() && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n' || s[i] == '\r')) ++i;
+    size_t j = s.size();
+    while (j > i && (s[j - 1] == ' ' || s[j - 1] == '\t' || s[j - 1] == '\n' || s[j - 1] == '\r')) --j;
+    return s.substr(i, j - i);
+}
+
 static std::unordered_set<std::string> tokenize_post(const std::string& raw) {
     std::string norm = textutil::normalize(raw);
     auto toks = textutil::tokenize(norm);
@@ -73,6 +89,20 @@ static std::unordered_set<std::string> tokenize_post(const std::string& raw) {
     s.reserve(ntoks.size());
     for (auto& t : ntoks) {
         if (!t.empty()) s.insert(t);
+    }
+    return s;
+}
+
+static std::unordered_set<std::string> tokenize_text(const std::string& raw) {
+    std::string norm = textutil::normalize(raw);
+    auto toks = textutil::tokenize(norm);
+    auto ntoks = textutil::normalize_tokens(toks);
+    std::unordered_set<std::string> s;
+    s.reserve(ntoks.size());
+    for (auto& t : ntoks) if (!t.empty()) s.insert(t);
+    if (s.find("cpp") != s.end()) {
+        s.erase("cpp");
+        s.insert("c++");
     }
     return s;
 }
@@ -91,19 +121,6 @@ static void print_reqs(Printer& pr, const std::string& id, const ExtractedReqs& 
 }
 
 // ---------- Day 3 helpers ----------
-
-static std::string to_lower_ascii(std::string s) {
-    for (char& c : s) if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
-    return s;
-}
-
-static std::string trim_ascii(const std::string& s) {
-    size_t i = 0;
-    while (i < s.size() && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n' || s[i] == '\r')) ++i;
-    size_t j = s.size();
-    while (j > i && (s[j - 1] == ' ' || s[j - 1] == '\t' || s[j - 1] == '\n' || s[j - 1] == '\r')) --j;
-    return s.substr(i, j - i);
-}
 
 static std::string canonicalize_skill(const std::string& raw) {
     std::string s = trim_ascii(raw);
@@ -319,6 +336,120 @@ static std::string shrink_posting_for_llm(const std::string& raw) {
     return out;
 }
 
+// ---------- NEW: zone extraction for rerank ----------
+
+struct Zones {
+    std::string title;
+    std::string lead;
+    std::string req;
+};
+
+static std::string extract_title_from_kv_blob(const std::string& raw) {
+    std::string lower = to_lower_ascii(raw);
+    size_t tpos = lower.find(":title");
+    if (tpos == std::string::npos) return "";
+
+    size_t start = raw.find_first_not_of(" \t\r\n", tpos + 6);
+    if (start == std::string::npos) return "";
+
+    while (start < raw.size() && (raw[start] == ' ' || raw[start] == '\t' || raw[start] == ':')) start++;
+    while (start < raw.size() && (raw[start] == ' ' || raw[start] == '\t')) start++;
+
+    size_t end = raw.find(", :description", start);
+    if (end == std::string::npos) end = raw.find(", :location", start);
+    if (end == std::string::npos) end = raw.find(", :employer", start);
+    if (end == std::string::npos) end = raw.find(", :skills", start);
+    if (end == std::string::npos) end = raw.find('\n', start);
+    if (end == std::string::npos) end = std::min(raw.size(), start + (size_t)160);
+
+    if (end <= start) return "";
+    std::string t = trim_ascii(raw.substr(start, end - start));
+    if (t.size() > 200) t.resize(200);
+    return t;
+}
+
+static std::string extract_title_fallback_line(const std::string& raw) {
+    size_t i = 0;
+    while (i < raw.size() && i < 2000) {
+        size_t j = raw.find('\n', i);
+        if (j == std::string::npos) j = raw.size();
+        std::string line = trim_ascii(raw.substr(i, j - i));
+        if (!line.empty()) {
+            if (line.size() <= 90) return line;
+            break;
+        }
+        i = (j == raw.size()) ? j : j + 1;
+    }
+    return "";
+}
+
+static std::string extract_requirements_block(const std::string& raw) {
+    std::string lower = to_lower_ascii(raw);
+
+    struct Key { const char* k; };
+    const Key starts[] = {
+        {"requirements"}, {"requirement"}, {"qualifications"}, {"qualification"},
+        {"what you bring"}, {"what you'll bring"}, {"skills"}, {"you have"}, {"must have"}
+    };
+
+    const Key stops[] = {
+        {"responsibilities"}, {"responsibility"},
+        {"benefits"}, {"perks"}, {"about us"}, {"about the company"},
+        {"equal opportunity"}, {"eeo"}, {"privacy"}, {"legal"}
+    };
+
+    auto find_any = [&](const Key* arr, size_t n, size_t from) -> size_t {
+        size_t best = std::string::npos;
+        for (size_t i = 0; i < n; ++i) {
+            size_t pos = lower.find(arr[i].k, from);
+            if (pos != std::string::npos) {
+                if (best == std::string::npos || pos < best) best = pos;
+            }
+        }
+        return best;
+    };
+
+    std::string out;
+    out.reserve(5000);
+
+    size_t from = 0;
+    int blocks = 0;
+    while (blocks < 2) {
+        size_t s = find_any(starts, sizeof(starts)/sizeof(starts[0]), from);
+        if (s == std::string::npos) break;
+
+        size_t e = find_any(stops, sizeof(stops)/sizeof(stops[0]), s + 1);
+        if (e == std::string::npos) e = std::min(raw.size(), s + (size_t)3500);
+        else e = std::min(e, s + (size_t)3500);
+
+        if (!out.empty()) out += "\n\n";
+        out += raw.substr(s, e - s);
+
+        from = e;
+        blocks++;
+    }
+
+    if (out.size() > 6000) out.resize(6000);
+    return out;
+}
+
+static Zones extract_zones(const std::string& raw) {
+    Zones z;
+
+    z.title = extract_title_from_kv_blob(raw);
+    if (z.title.empty()) z.title = extract_title_fallback_line(raw);
+
+    // lead: very top of posting, domain-agnostic
+    const size_t LEAD_CAP = 1400;
+    if (!raw.empty()) {
+        size_t cap = std::min(raw.size(), LEAD_CAP);
+        z.lead = raw.substr(0, cap);
+    }
+
+    z.req = extract_requirements_block(raw);
+    return z;
+}
+
 // --- tokenize the query/role so lex rerank is anchored to what user asked ---
 static std::unordered_set<std::string> tokenize_query(const std::string& role) {
     std::string norm = textutil::normalize(role);
@@ -341,6 +472,41 @@ static bool role_mentions_cpp(const std::unordered_set<std::string>& q) {
 
 static bool post_has_cpp(const std::unordered_set<std::string>& toks) {
     return (toks.find("c++") != toks.end() || toks.find("cpp") != toks.end());
+}
+
+static bool tokens_has_any(const std::unordered_set<std::string>& toks, const std::unordered_set<std::string>& need) {
+    for (const auto& x : need) {
+        if (toks.find(x) != toks.end()) return true;
+    }
+    return false;
+}
+
+static double zone_query_score(const std::unordered_set<std::string>& zone_toks,
+                               const std::unordered_set<std::string>& q_tokens,
+                               const std::function<double(const std::string&)>& idf) {
+    double s = 0.0;
+    for (const auto& qt : q_tokens) {
+        if (zone_toks.find(qt) != zone_toks.end()) s += idf(qt);
+    }
+    return s;
+}
+
+static bool title_has_conflicting_lang(const std::unordered_set<std::string>& title_toks,
+                                       const std::unordered_set<std::string>& q_tokens) {
+    const bool q_has_cpp = (q_tokens.find("c++") != q_tokens.end() || q_tokens.find("cpp") != q_tokens.end());
+    if (!q_has_cpp) return false;
+
+    const bool title_has_cpp = (title_toks.find("c++") != title_toks.end() || title_toks.find("cpp") != title_toks.end());
+    if (title_has_cpp) return false;
+
+    static const char* langs[] = {
+        "java","python","ruby","c#","csharp","javascript","typescript","php","scala","kotlin","golang","go"
+    };
+
+    for (const char* l : langs) {
+        if (title_toks.find(l) != title_toks.end()) return true;
+    }
+    return false;
 }
 
 // ---------------------------------------------------
@@ -366,10 +532,12 @@ int cmd_analyze(int argc, char** argv) {
     bool do_profile = has_flag(argc, argv, "--profile");
     std::string outdir_s = get_arg(argc, argv, "--outdir", "out");
 
-    const double alpha       = 0.70;
+    // IMPORTANT CHANGE:
+    // Title/top-part is FIRST PRIORITY now.
+    // We still keep embedding in the mix, but it’s a *tie-breaker*.
     const size_t topn_seed   = 10;
     const size_t topx_tokens = 30;
-    const size_t bigk_floor  = 50;
+    const size_t bigk_floor  = 80; // increased so title-only postings have more chance to show up
 
     if (role.empty()) {
         std::cerr << "error: missing --role\n";
@@ -470,12 +638,34 @@ int cmd_analyze(int argc, char** argv) {
         return 0;
     }
 
+    // query tokens early (so we can "rescue" strong-title hits even if emb score is low)
+    auto q_tokens = tokenize_query(role);
+    const bool wants_cpp = role_mentions_cpp(q_tokens);
+
+    // IMPORTANT CHANGE:
+    // Do NOT throw away postings just because embedding is below min_score
+    // if the TITLE / TOP PART matches the query tokens.
     std::vector<decltype(hits)::value_type> kept;
     kept.reserve(hits.size());
     for (const auto& h : hits) {
-        if (h.score >= min_score) kept.push_back(h);
+        bool keep_by_emb = (h.score >= min_score);
+
+        bool keep_by_title_or_lead = false;
+        auto itp = by_id.find(h.job_id);
+        if (itp != by_id.end()) {
+            Zones z = extract_zones(itp->second->raw_text);
+            auto title_toks = tokenize_text(z.title);
+            auto lead_toks  = tokenize_text(z.lead);
+
+            // "title/top is first priority": if any query token appears in title OR lead, keep it.
+            // This is what makes your one-line "C++ Backend Engineer" reliably survive filtering.
+            keep_by_title_or_lead = tokens_has_any(title_toks, q_tokens) || tokens_has_any(lead_toks, q_tokens);
+        }
+
+        if (keep_by_emb || keep_by_title_or_lead) kept.push_back(h);
     }
-    pr << "KEPT: " << kept.size() << " (min_score=" << min_score << ")\n";
+
+    pr << "KEPT: " << kept.size() << " (min_score=" << min_score << ", title/lead rescue enabled)\n";
 
     if (kept.empty()) {
         if (write_out) { out.flush(); out.close(); }
@@ -490,11 +680,7 @@ int cmd_analyze(int argc, char** argv) {
         return std::log((1.0 + (double)M) / (1.0 + (double)d));
     };
 
-    // query tokens and optional C++ gate
-    auto q_tokens = tokenize_query(role);
-    const bool wants_cpp = role_mentions_cpp(q_tokens);
-
-    // seed top tokens from seed hits (existing behavior)
+    // seed top tokens from seed hits (keeps your existing "top_tokens" flavor)
     const size_t seedN = std::min(topn_seed, kept.size());
     std::unordered_map<std::string, int> tf_top;
     tf_top.reserve(1024);
@@ -523,65 +709,138 @@ int cmd_analyze(int argc, char** argv) {
     top_tokens.reserve(scored.size() * 2);
     for (const auto& ts : scored) top_tokens.insert(ts.tok);
 
-    // always include query tokens in the lex scoring set
+    // always include query tokens in lex scoring set
     for (const auto& qt : q_tokens) {
         if (!qt.empty()) top_tokens.insert(qt);
     }
 
     struct RankedHit {
         std::string job_id;
-        double emb_score;
-        double lex_score;
-        double combined;
+
+        double emb_score = 0.0;
+        double lex_score = 0.0;      // still printed (now mostly header-driven)
+        double combined  = 0.0;      // now effectively "header-first"
+
+        // debug flags
         bool has_cpp = false;
+        bool has_title = false;
+        bool title_conflict = false;
+        bool identity_match = false;
+
+        // debug scores
+        double s_title = 0.0;
+        double s_lead  = 0.0;
+        double s_req   = 0.0;
     };
 
     std::vector<RankedHit> ranked;
     ranked.reserve(kept.size());
 
+    // IMPORTANT CHANGE: SUPER HEAVY title weighting.
+    // If you want “title/top part is first priority”, you do NOT want alpha=0.7 anymore.
+    // Here we make title dominate; embedding becomes a weak tie-breaker.
+    const double WT_TITLE = 200.0;
+    const double WT_LEAD  = 80.0;
+    const double WT_REQ   = 20.0;
+    const double WT_BODYQ = 4.0;
+    const double WT_BODYLEX = 1.0;
+
+    // penalties/bonuses for identity mismatch (C++ example, but only kicks in when query has C++)
+    const double PENALTY_TITLE_CONFLICT = 500.0; // "Java ..." title when query asks for C++
+    const double PENALTY_MISSING_IDENTITY = 200.0;
+    const double BONUS_IDENTITY_IN_TITLE  = 120.0;
+
     for (const auto& h : kept) {
+        auto itp = by_id.find(h.job_id);
+        if (itp == by_id.end()) continue;
+
+        const auto& post = *itp->second;
+
         auto pt_it = post_tokens.find(h.job_id);
         if (pt_it == post_tokens.end()) continue;
 
-        const auto& toks = pt_it->second;
+        const auto& body_toks = pt_it->second;
 
-        // base lex score: sum idf for selected tokens present
-        double lex = 0.0;
-        for (const auto& tok : toks) {
-            if (top_tokens.find(tok) != top_tokens.end()) lex += idf(tok);
+        Zones z = extract_zones(post.raw_text);
+
+        auto title_toks = tokenize_text(z.title);
+        auto lead_toks  = tokenize_text(z.lead);
+        auto req_toks   = tokenize_text(z.req);
+
+        const bool has_title = !trim_ascii(z.title).empty();
+
+        // Title/lead identity match: query tokens appear in title or lead
+        const bool title_match = has_title ? tokens_has_any(title_toks, q_tokens) : false;
+        const bool lead_match  = tokens_has_any(lead_toks,  q_tokens);
+        const bool identity_match = (has_title ? (title_match || lead_match) : lead_match);
+
+        // base body lex (seeded tokens) — now small, since you want header first
+        double base_lex = 0.0;
+        for (const auto& tok : body_toks) {
+            if (top_tokens.find(tok) != top_tokens.end()) base_lex += idf(tok);
         }
 
-        // strong boost for query token matches
-        double qboost = 0.0;
-        for (const auto& qt : q_tokens) {
-            if (toks.find(qt) != toks.end()) {
-                qboost += 3.0 * idf(qt);
-            }
+        // query-token presence scores per zone
+        double s_title = zone_query_score(title_toks, q_tokens, idf);
+        double s_lead  = zone_query_score(lead_toks,  q_tokens, idf);
+        double s_req   = zone_query_score(req_toks,   q_tokens, idf);
+        double s_bodyq = zone_query_score(body_toks,  q_tokens, idf);
+
+        // C++ conflict logic retained (helps avoid "Java Software Engineer" when role says C++)
+        const bool title_conflict = title_has_conflicting_lang(title_toks, q_tokens);
+        const bool title_has_cpp = (title_toks.find("c++") != title_toks.end() || title_toks.find("cpp") != title_toks.end());
+        const bool lead_has_cpp  = (lead_toks.find("c++")  != lead_toks.end()  || lead_toks.find("cpp")  != lead_toks.end());
+
+        double identity_adj = 0.0;
+        if (wants_cpp) {
+            if (title_conflict) identity_adj -= PENALTY_TITLE_CONFLICT;
+
+            const bool in_title_or_lead = (title_has_cpp || lead_has_cpp);
+            if (!in_title_or_lead) identity_adj -= PENALTY_MISSING_IDENTITY;
+            else if (title_has_cpp) identity_adj += BONUS_IDENTITY_IN_TITLE;
         }
 
-        const double lex_total = lex + qboost;
+        // FINAL: Header-first score.
+        // This is what forces a one-line "C++ Backend Engineer" posting to rise to the top.
+        double header_first_score =
+            WT_TITLE * s_title +
+            WT_LEAD  * s_lead  +
+            WT_REQ   * s_req   +
+            WT_BODYQ * s_bodyq +
+            WT_BODYLEX * base_lex +
+            identity_adj;
 
-        double emb_s = (double)h.score;
-        double comb = alpha * emb_s + (1.0 - alpha) * lex_total;
+        // Embedding is now ONLY a tiny tie-breaker.
+        // (We keep it so the system still works when postings have no usable titles.)
+        const double emb_tiebreak = 5.0 * (double)h.score;
+
+        double combined = header_first_score + emb_tiebreak;
 
         RankedHit rh;
         rh.job_id = h.job_id;
-        rh.emb_score = emb_s;
-        rh.lex_score = lex_total;
-        rh.combined = comb;
-        rh.has_cpp = post_has_cpp(toks);
+        rh.emb_score = (double)h.score;
+        rh.lex_score = header_first_score; // keep printing as "lex" for continuity
+        rh.combined  = combined;
+
+        rh.has_cpp = post_has_cpp(body_toks);
+        rh.has_title = has_title;
+        rh.title_conflict = title_conflict;
+        rh.identity_match = identity_match;
+
+        rh.s_title = s_title;
+        rh.s_lead  = s_lead;
+        rh.s_req   = s_req;
 
         ranked.push_back(std::move(rh));
     }
 
+    // HARD RULE: title/lead identity matches are always first.
+    // Then sort by the header-first score.
+    std::stable_partition(ranked.begin(), ranked.end(),
+                          [](const RankedHit& r){ return r.identity_match; });
+
     std::sort(ranked.begin(), ranked.end(),
               [](const RankedHit& a, const RankedHit& b){ return a.combined > b.combined; });
-
-    // HARD preference: if role asks for C++, bring C++ postings to the front (if any exist)
-    if (wants_cpp) {
-        std::stable_partition(ranked.begin(), ranked.end(),
-                              [](const RankedHit& r){ return r.has_cpp; });
-    }
 
     if (ranked.size() > topk) ranked.resize(topk);
 
@@ -621,9 +880,13 @@ int cmd_analyze(int argc, char** argv) {
         pr << "\n# hit " << rh.job_id
            << " combined=" << rh.combined
            << " emb=" << rh.emb_score
-           << " lex=" << rh.lex_score;
+           << " header=" << rh.lex_score
+           << " TITLE=" << rh.s_title
+           << " LEAD=" << rh.s_lead
+           << " REQ=" << rh.s_req
+           << " ID_MATCH=" << (rh.identity_match ? "yes" : "no");
 
-        if (wants_cpp) pr << " HAS_CPP=" << (rh.has_cpp ? "yes" : "no");
+        if (wants_cpp) pr << " TITLE_CONFLICT=" << (rh.title_conflict ? "yes" : "no");
         pr << "\n";
 
         const std::string& post_id = it->second->id;
@@ -754,8 +1017,8 @@ int cmd_analyze(int argc, char** argv) {
         write_mentions_jsonl(mentions_path, all_mentions);
         write_profile_json(profile_path, role, (int)ranked.size(), weights, core, secondary, nice, agg);
 
-        pr << "\nDAY3: wrote " << mentions_path.string() << "\n";
-        pr << "DAY3: wrote " << profile_path.string() << "\n";
+        pr << "\nwrote " << mentions_path.string() << "\n";
+        pr << "wrote " << profile_path.string() << "\n";
     }
 
     if (write_out) {
