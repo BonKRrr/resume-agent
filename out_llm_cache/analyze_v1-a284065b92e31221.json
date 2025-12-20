@@ -1,0 +1,104 @@
+{
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Has a BS, MS, or PhD in Computer Science, or equivalent work experience.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Computer Science", "canonical":"Computer Science", "confidence":0.8},
+        {"raw":"equivalent work experience", "canonical":"equivalent work experience", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Has a strong algorithms and data structures background.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"algorithms", "canonical":"algorithms", "confidence":0.9},
+        {"raw":"data structures", "canonical":"data structures", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Has experience handling web applications at scale and ideally some of those are large social networks.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"web applications", "canonical":"web applications", "confidence":0.9},
+        {"raw":"large social networks", "canonical":"large social networks", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Has an understanding of good software development practices/patterns/architecture.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"software development", "canonical":"software development", "confidence":0.8},
+        {"raw":"patterns", "canonical":"patterns", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Has mastered at least one programming language and ideally has some experience in Ruby.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"programming language", "canonical":"programming language", "confidence":0.9},
+        {"raw":"Ruby", "canonical":"Ruby", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Work closely with other engineers within your group and across the entire engineering organization.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"teamwork", "canonical":"teamwork", "confidence":0.6},
+        {"raw":"communication", "canonical":"communication", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Rapidly iterate on product and platform features.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"agile", "canonical":"agile", "confidence":0.7},
+        {"raw":"iteration", "canonical":"iteration", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "Enjoys to work as part of a team.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"teamwork", "canonical":"teamwork", "confidence":0.6},
+        {"raw":"collaboration", "canonical":"collaboration", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "Picks up new things quickly.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"adaptability", "canonical":"adaptability", "confidence":0.6},
+        {"raw":"learning", "canonical":"learning", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "Writes clean, elegant, readable and well-documented code.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"code quality", "canonical":"code quality", "confidence":0.6},
+        {"raw":"documentation", "canonical":"documentation", "confidence":0.5}
+      ]
+    }
+  ]
+}

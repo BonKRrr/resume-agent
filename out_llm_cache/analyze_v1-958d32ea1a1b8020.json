@@ -1,0 +1,80 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Build efficient and reusable PHP-software",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"PHP", "canonical":"PHP", "confidence":0.9},
+        {"raw":"OOP", "canonical":"Object-Oriented Programming", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Identify and address performance issues",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"performance debugging", "canonical":"performance debugging", "confidence":0.7},
+        {"raw":"benchmarking", "canonical":"benchmarking", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Expert knowledge of PHP5/OOP, MySQL-databases and datamodelling",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"PHP5", "canonical":"PHP 5", "confidence":0.9},
+        {"raw":"MySQL", "canonical":"MySQL", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with Zend-Framework is a plus",
+      "polarity": "negated",
+      "strength": "should",
+      "skills": [
+        {"raw":"Zend Framework", "canonical":"Zend Framework", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with Java and Solr is a plus",
+      "polarity": "negated",
+      "strength": "should",
+      "skills": [
+        {"raw":"Java", "canonical":"Java", "confidence":0.6},
+        {"raw":"Solr", "canonical":"Solr", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Participate in design and code reviews",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"code review", "canonical":"code review", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Identify and prototype best practices for backend engineering",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"best practices", "canonical":"best practices", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "BS or MS degree in Computer Science or a related technical field, also natural sciences possible",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Computer Science", "canonical":"Computer Science", "confidence":0.9}
+      ]
+    }
+  ]
+}

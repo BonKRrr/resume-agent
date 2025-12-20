@@ -1,0 +1,129 @@
+{
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Your education and experience must be in a technology related field and you must have 5+ years of design and development in highly available commercial SaaS systems.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"design and development","canonical":"Design and Development","confidence":0.8},
+        {"raw":"highly available commercial SaaS systems","canonical":"Highly Available Commercial SaaS Systems","confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You must be entrepreneurial in your approach while being practical in your timeframes.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"entrepreneurial approach","canonical":"Entrepreneurial Approach","confidence":0.7},
+        {"raw":"practical timeframes","canonical":"Practical Timeframes","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You must be highly technical and project savvy while still understanding the business.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"highly technical","canonical":"Highly Technical","confidence":0.8},
+        {"raw":"project savvy","canonical":"Project Savvy","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You must have experience in leading technical and business initiatives, within startup companies, while still understanding the maturity of the organization.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"leading technical and business initiatives","canonical":"Leading Technical and Business Initiatives","confidence":0.9},
+        {"raw":"maturity of the organization","canonical":"Maturity of the Organization","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You will need to work with existing systems and re-architect them so that you are highly available with a better user experience.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"existing systems","canonical":"Existing Systems","confidence":0.7},
+        {"raw":"re-architecture","canonical":"Re-Architecture","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You must be a great at communicating your recommendations to the Executive team and must establish yourself as, not only a top-tier architect, but also as a strategist at the highest level.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"communicating recommendations","canonical":"Communicating Recommendations","confidence":0.8},
+        {"raw":"top-tier architect","canonical":"Top-Tier Architect","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You will need the ability to not only help manage larger projects, but also have the skills and knowledge necessary help mature the company in architecture and design processes.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"larger projects","canonical":"Larger Projects","confidence":0.6},
+        {"raw":"architecture and design processes","canonical":"Architecture and Design Processes","confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You must understand how to efficiently deploy and effectively utilize the team to complete the initiatives as specified.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"deploying teams","canonical":"Deploying Teams","confidence":0.7},
+        {"raw":"utilizing teams","canonical":"Utilizing Teams","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You will be creating partnerships at every level in the company and provide guidance and oversight to all.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"creating partnerships","canonical":"Creating Partnerships","confidence":0.8},
+        {"raw":"guidance and oversight","canonical":"Guidance and Oversight","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "General BS in Computer Science.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"BS in Computer Science","canonical":"BS in Computer Science","confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience working with Agile and SCRUM.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Agile and SCRUM","canonical":"Agile and SCRUM","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in creating and reviewing all design documentation.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"design documentation","canonical":"Design Documentation","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in management processes.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"management processes","canonical":"Management Processes","confidence":0.6}
+      ]
+    }
+  ]}

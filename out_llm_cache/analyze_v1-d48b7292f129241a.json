@@ -1,0 +1,144 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Help to drive the technical architecture evolution with our lead architect (influence teams, but also code hands-on yourself)",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby on rails","confidence":0.8},
+        {"raw":"server-side framework experience","canonical":"server-side frameworks","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Maintain and evolve existing services - including refactoring and reduction of technical debt",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"refactoring","canonical":"refactoring","confidence":0.9},
+        {"raw":"technical debt management","canonical":"technical debt management","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Identify and implement innovative solutions and ensure long-term stability and maintainability of our code base",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"innovative solution implementation","canonical":"innovative solution implementation","confidence":0.7},
+        {"raw":"code maintainability","canonical":"code maintainability","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Ensure code quality and participate in code reviews",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"code review participation","canonical":"code review participation","confidence":0.8},
+        {"raw":"code quality assurance","canonical":"code quality assurance","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "5+ years experience in software development",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"software development experience","canonical":"software development experience","confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Very good knowledge in Ruby on Rails development, at least 3+ years experience",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby on rails","confidence":0.8},
+        {"raw":"server-side framework experience","canonical":"server-side frameworks","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Proven experience in at least one other server-side framework (e.g. using node.js, Erlang)",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"server-side framework experience","canonical":"server-side frameworks","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Proven experience in at least one client-side framework (single-page web application framework, e.g. AngularJS or ember.js; or mobile development for iOS or Android)",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"client-side framework experience","canonical":"client-side frameworks","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Software development talent proven by great work results/experience, hobby projects or open source contribution",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"software development experience","canonical":"software development experience","confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Passion for building scalable distributed architectures and services using proven software design techniques",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"software design techniques","canonical":"software design techniques","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in using cloud services, ideally AWS",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"cloud service experience","canonical":"cloud services","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in architecting solutions and agreeing them with stakeholders as well as driving architectural decisions",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"architectural decision making","canonical":"architectural decisions","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in refactoring and methodologies of managing and driving down technical debt",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"refactoring","canonical":"refactoring","confidence":0.9},
+        {"raw":"technical debt management","canonical":"technical debt management","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in testing frameworks and automated regression tests",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"testing framework experience","canonical":"testing frameworks","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "OPTIONAL: understanding of lean and agile practices, in particular Scrum and Kanban",
+      "polarity": "negated",
+      "strength": "nice",
+      "skills": [
+        {"raw":"agile practice experience","canonical":"agile practices","confidence":0.6}
+      ]
+    }
+  ]}

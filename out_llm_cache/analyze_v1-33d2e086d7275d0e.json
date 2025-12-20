@@ -1,0 +1,83 @@
+{
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Experience developing applications within a UNIX/Linux or Windows based environment.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"UNIX/Linux experience", "canonical":"UNIX/Linux experience", "confidence":0.8},
+        {"raw":"Windows experience", "canonical":"Windows experience", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "In-depth programming knowledge of one of the following languages: Java, C#, C/C+, Python, JavaScript, HTML, CSS.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Java", "canonical":"Java", "confidence":0.9},
+        {"raw":"C#", "canonical":"C#", "confidence":0.8},
+        {"raw":"Python", "canonical":"Python", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Strong MS Office skills and experience presenting to stakeholders.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"MS Office", "canonical":"MS Office", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Must be a self-starter, with strong analytical and interpersonal skills, as well as the ability to work in a fast-paced environment and manage multiple competing priorities.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Analytical skills", "canonical":"Analytical skills", "confidence":0.8},
+        {"raw":"Interpersonal skills", "canonical":"Interpersonal skills", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Responsible for all ranges of project work and daily support as outlined by given business and increasing efficiencies in current department.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Project management", "canonical":"Project management", "confidence":0.6},
+        {"raw":"Daily support", "canonical":"Daily support", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Design and integration testing of applications.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Testing", "canonical":"Testing", "confidence":0.6},
+        {"raw":"Integration testing", "canonical":"Integration testing", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Release and incident management of applications.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Release management", "canonical":"Release management", "confidence":0.6},
+        {"raw":"Incident management", "canonical":"Incident management", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "We thrive on the challenge to be our best, progressive thinking to keep growing, and working together to deliver trusted advice to help our clients thrive and communities prosper.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"Progressive thinking", "canonical":"Progressive thinking", "confidence":0.4},
+        {"raw":"Teamwork", "canonical":"Teamwork", "confidence":0.3}
+      ]
+    }
+  ]}

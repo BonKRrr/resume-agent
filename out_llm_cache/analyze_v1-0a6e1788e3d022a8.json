@@ -1,0 +1,35 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Work as part of an agile team to deliver internal tools for our products in a fast paced environment Experiment with new frontend development technologies to build a streamlined content production pipeline Use a test, learn and adapt approach to work with stakeholders to build optimal editor experience Continuesly analyse and re-build tools to optimally support the on-site and off-site content production process Work closely together with product owners, designers and the didactics team to develop the best editor experience",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"javascript development","canonical":"Javascript development","confidence":0.8},
+        {"raw":"git","canonical":"Git","confidence":0.7},
+        {"raw":"html css rest regex lint mvc tdd unit functional automatic testing","canonical":"HTML, CSS, REST, REGEX, Lint, MVC, TDD, Unit/Functional Automatic Testing","confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "5+ years experience in software development Very good knowledge in Javascript development, at least 3+ years experience Good knowledge of Git, HTML, CSS, REST, REGEX, Lint, MVC, TDD, unit/ functional automatic testing",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"javascript development","canonical":"Javascript development","confidence":0.8},
+        {"raw":"git","canonical":"Git","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Responsibility from day one and professional and personal growth Potential within a fast growing team Participate in hackdays, open-source contributions, technology brown-bags A lively startup atmosphere with friendly working hours Long-term prospects A vibrant international team from over 20 different nationalities Excellent working conditions with a location in the heart of the Berlin scene Great company",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"open source contributions","canonical":"Open Source Contributions","confidence":0.6},
+        {"raw":"ruby databases regex lint","canonical":"Ruby, Databases, REGEX, Lint","confidence":0.5}
+      ]
+    }
+  ]
+}

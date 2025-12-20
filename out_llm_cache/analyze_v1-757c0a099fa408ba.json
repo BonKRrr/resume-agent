@@ -1,0 +1,120 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Design, code and test new features",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Design","canonical":"design","confidence":0.8},
+        {"raw":"code","canonical":"code","confidence":0.9},
+        {"raw":"test","canonical":"test","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Debug and diagnose issues across network, OS, application and service",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"debug","canonical":"debug","confidence":0.8},
+        {"raw":"diagnose","canonical":"diagnose","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Perform code reviews for your peer developers",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"code review","canonical":"code review","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Inspire and share your experience with your colleagues",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"share experience","canonical":"share experience","confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Expert in AWS CloudFormation and Chef",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"CloudFormation","canonical":"cloudformation","confidence":0.9},
+        {"raw":"Chef","canonical":"chef","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Fluent in English reading, writing and speaking",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"English","canonical":"english","confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Experience configuring, deploying and running a large cloud based service on AWS",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"AWS","canonical":"aws","confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Experience working with Linux/Unix as well as Windows",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Linux","canonical":"linux","confidence":0.5},
+        {"raw":"Unix","canonical":"unix","confidence":0.4}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Experience with relational databases like Microsoft SQL Server or Oracle Database",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"SQL Server","canonical":"sql server","confidence":0.4},
+        {"raw":"Oracle Database","canonical":"oracle database","confidence":0.3}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Experience with enterprise-level service characteristics such as Availability, Security, Performance, Stability, Scalability, etc.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Availability","canonical":"availability","confidence":0.3},
+        {"raw":"Security","canonical":"security","confidence":0.2}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Exposure to Continuous Delivery processes and software development lifecycle tools such as TFS, Git, Jenkins, etc.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"TFS","canonical":"tfs","confidence":0.2},
+        {"raw":"Git","canonical":"git","confidence":0.1}
+      ]
+    },
+    {
+      "span_type": "skill",
+      "span_text": "Working knowledge in an agile development atmosphere like Scrum or Kanban",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Scrum","canonical":"scrum","confidence":0.1},
+        {"raw":"Kanban","canonical":"kanban","confidence":0.05}
+      ]
+    }
+  ]}

@@ -1,0 +1,114 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility|other",
+      "span_text": "lead the team to technical excellence (together with our frontend architecture lead) have the complete technical overview of the technical solution and remind team of long term architecture vision",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"TDD", "canonical":"Test-Driven Development", "confidence":0.8},
+        {"raw":"CI", "canonical":"Continuous Integration", "confidence":0.7},
+        {"raw":"CD", "canonical":"Continuous Deployment", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility|other",
+      "span_text": "facilitate standards and quality within the team, reduce technical debt be part of the team (write signficant amount of code - not own the code alone, but ensure collective code ownership)",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails", "canonical":"Ruby on Rails framework", "confidence":0.9},
+        {"raw":"JavaScript", "canonical":"JavaScript programming language", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility|other",
+      "span_text": "coach and challenge the team as well as team members in developing technical & personal skills",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Agile", "canonical":"Agile methodology", "confidence":0.7},
+        {"raw":"Scrum", "canonical":"Scrum framework", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility|other",
+      "span_text": "conduct regular objectives & feedbacks, assist in hiring and ensure onboarding of new employees",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Python", "canonical":"Python programming language", "confidence":0.5},
+        {"raw":"SQL", "canonical":"SQL database management system", "confidence":0.4}
+      ]
+    },
+    {
+      "span_type": "responsibility|other",
+      "span_text": "work closely with the ScrumMaster to improve Scrum adoption and agile processes in the team",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Agile", "canonical":"Agile methodology", "confidence":0.7},
+        {"raw":"Scrum", "canonical":"Scrum framework", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility|other",
+      "span_text": "work closely together with product owners and stakeholders to assure technical feasibility and identify risks at an early stage",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"JavaScript", "canonical":"JavaScript programming language", "confidence":0.8},
+        {"raw":"Ruby on Rails", "canonical":"Ruby on Rails framework", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement|other",
+      "span_text": "5 years+ experience in delivering stunning front-end products",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"JavaScript", "canonical":"JavaScript programming language", "confidence":0.8},
+        {"raw":"Ruby on Rails", "canonical":"Ruby on Rails framework", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement|other",
+      "span_text": "Solid understanding of lean and agile practices, in particular SCRUM",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Agile", "canonical":"Agile methodology", "confidence":0.7},
+        {"raw":"Scrum", "canonical":"Scrum framework", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement|other",
+      "span_text": "Outstanding software development talent proven by great work results/experience, hobby projects or open source contribution",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"JavaScript", "canonical":"JavaScript programming language", "confidence":0.8},
+        {"raw":"Ruby on Rails", "canonical":"Ruby on Rails framework", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement|other",
+      "span_text": "Passion for building great products and user-interfaces",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"HTML", "canonical":"Hypertext Markup Language", "confidence":0.5},
+        {"raw":"CSS", "canonical":"Cascading Style Sheets", "confidence":0.4}
+      ]
+    },
+    {
+      "span_type": "requirement|other",
+      "span_text": "Open minded, outgoing, self-confident and positive personality Can do attitude, great team player",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"English", "canonical":"English language", "confidence":0.3},
+        {"raw":"German", "canonical":"German language", "confidence":0.2}
+      ]
+    }
+  ]}

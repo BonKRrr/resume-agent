@@ -1,0 +1,159 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Work in a cross-functional, agile team closely together with designers and product owners to deliver the next release of Babbel Envision, architect and implement new projects and features and deliver them into production",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"JavaScript", "canonical":"javascript", "confidence":0.8},
+        {"raw":"Ruby on Rails", "canonical":"ruby-on-rails", "confidence":0.7},
+        {"raw":"Qunit", "canonical":"qunit", "confidence":0.6},
+        {"raw":"Mocha", "canonical":"mocha", "confidence":0.5},
+        {"raw":"Jasmine", "canonical":"jasmine", "confidence":0.4}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Identify and implement innovative Frontend solutions and ensure long-term stability and maintainability of our code base",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Frontend driven software architectures", "canonical":"frontend-driven-software-architectures", "confidence":0.9},
+        {"raw":"JavaScript design patterns", "canonical":"javascript-design-patterns", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Ensure browser support and compatibility across devices",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Browser support", "canonical":"browser-support", "confidence":0.7},
+        {"raw":"Device capabilities", "canonical":"device-capabilities", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Take ownership of features, work with the team and stakeholders to implement great functionality and stunning user experience",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"User experience", "canonical":"user-experience", "confidence":0.8},
+        {"raw":"Design and usability details", "canonical":"design-and-usability-details", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Work closely together with other engineering teams (backend, mobile, devops) to ensure seamless user experience and efficient overall architecture",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Backend", "canonical":"backend", "confidence":0.6},
+        {"raw":"Mobile", "canonical":"mobile", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "4+ years experience with building and maintaining high-traffic web applications",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"High-traffic web applications", "canonical":"high-traffic-web-applications", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "2+ years experience with building Frontend driven software architectures using JavaScript",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Frontend driven software architectures", "canonical":"frontend-driven-software-architectures", "confidence":0.9},
+        {"raw":"JavaScript", "canonical":"javascript", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "2+ years experience with the full Ruby on Rails application stack",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails", "canonical":"ruby-on-rails", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with JavaScript design patterns and best practices",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"JavaScript design patterns", "canonical":"javascript-design-patterns", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with implementing user interfaces that work across device capabilities and screen sizes",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Device capabilities", "canonical":"device-capabilities", "confidence":0.8},
+        {"raw":"Screen sizes", "canonical":"screen-sizes", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with design and consumption of REST-based APIs",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"REST-based APIs", "canonical":"rest-based-apis", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Ability to tackle Frontend performance issues",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Frontend performance", "canonical":"frontend-performance", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Software development talent proven by great work results/experience, hobby projects or open source contributions",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Software development", "canonical":"software-development", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "OPTIONAL Experience with building multi-language web applications",
+      "polarity": "negated",
+      "strength": "should",
+      "skills": [
+        {"raw":"Multi-language web applications", "canonical":"multi-language-web-applications", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "OPTIONAL Experience with database backends (SQL/noSQL)",
+      "polarity": "negated",
+      "strength": "should",
+      "skills": [
+        {"raw":"Database backends", "canonical":"database-backends", "confidence":0.7},
+        {"raw":"SQL", "canonical":"sql", "confidence":0.6},
+        {"raw":"NoSQL", "canonical":"nosql", "confidence":0.5}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "OPTIONAL Eye for design and usability details",
+      "polarity": "negated",
+      "strength": "should",
+      "skills": [
+        {"raw":"Design and usability", "canonical":"design-and-usability", "confidence":0.8}
+      ]
+    }
+  ]}

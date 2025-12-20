@@ -1,0 +1,47 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Researching storage solutions, implementing fault-tolerant architectures, and helping other teams roll out features that consume terabytes of data a day are all part of our daily routine.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"storage solutions", "canonical":"storage solutions", "confidence":0.8},
+        {"raw":"fault-tolerant architectures", "canonical":"fault-tolerant architectures", "confidence":0.7},
+        {"raw":"feature rollouts", "canonical":"feature rollouts", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with database schema design and tuning",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"database schema design", "canonical":"database schema design", "confidence":0.9},
+        {"raw":"database tuning", "canonical":"database tuning", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Thorough knowledge of design patterns, concurrency and multithreading",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"design patterns", "canonical":"design patterns", "confidence":0.9},
+        {"raw":"concurrency", "canonical":"concurrency", "confidence":0.8},
+        {"raw":"multithreading", "canonical":"multithreading", "confidence":0.7}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Ideally, experience with Kafka, Java NIO, and Cassandra",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Kafka", "canonical":"Kafka", "confidence":0.7},
+        {"raw":"Java NIO", "canonical":"Java NIO", "confidence":0.6},
+        {"raw":"Cassandra", "canonical":"Cassandra", "confidence":0.5}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Design, deployment and maintenance of our AWS infrastructure using Chef/OpsWorks",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"AWS", "canonical":"Amazon Web Services", "confidence":0.9},
+        {"raw":"Chef", "canonical":"Chef", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Support and implementation of our continuous integration and deployment infrastructure",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"CI/CD", "canonical":"Continuous Integration and Deployment", "confidence":0.7},
+        {"raw":"OpsWorks", "canonical":"OpsWorks", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Direct involvement in the development process of all our backend and frontend applications",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby", "canonical":"Ruby", "confidence":0.9},
+        {"raw":"Rails", "canonical":"Rails", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Broad knowledge and understanding of Linux: Virtually any and all of our web applications are running on Ubuntu Linux.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Linux", "canonical":"Linux", "confidence":0.9},
+        {"raw":"Ubuntu", "canonical":"Ubuntu", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Intrinsically familiar with Amazon’s Web Services: Amazon is our exclusive provider of computing resources.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"AWS", "canonical":"Amazon Web Services", "confidence":0.9},
+        {"raw":"EC2/EBS", "canonical":"EC2/EBS", "confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Zealot when it comes to Amazon’s Web Services: Amazon is our exclusive provider of computing resources.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"AWS", "canonical":"Amazon Web Services", "confidence":0.9},
+        {"raw":"OpsWorks", "canonical":"OpsWorks", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Eat Chef and Ruby for breakfast: We are a Ruby/Rails driven company and we also use Chef exclusively for instance management.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Chef", "canonical":"Chef", "confidence":0.8},
+        {"raw":"Ruby", "canonical":"Ruby", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Attention to detail and an analytical working style: You’re not satisfied when something just doesn’t work.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Analytical", "canonical":"Analytical", "confidence":0.7},
+        {"raw":"Attention to detail", "canonical":"Attention to detail", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "English is a must: You’ll be working with people from all around the world.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"English", "canonical":"English", "confidence":0.9}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Open-minded, easy-going and respectful attitude towards all kinds of (unusual) requests.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Communication", "canonical":"Communication", "confidence":0.7},
+        {"raw":"Teamwork", "canonical":"Teamwork", "confidence":0.6}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "You love open source as much as we do: Our company is built on it, we really enjoy working with it and so should you!",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"Open source", "canonical":"Open source", "confidence":0.8}
+      ]
+    }
+  ]}

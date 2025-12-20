@@ -1,0 +1,41 @@
+{
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Minimum of 5 years hands-on engineering in an object oriented language.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"object oriented language","canonical":"object-oriented language","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience in a production environment is ideal, but not required.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        {"raw":"production environment","canonical":"production environment","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience or expertise in Systems Engineering or Network Engineering is a big plus.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"Systems Engineering","canonical":"Systems Engineering","confidence":1.0},
+        {"raw":"Network Engineering","canonical":"Network Engineering","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Background in information security risk management is a big plus.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        {"raw":"information security risk management","canonical":"information security risk management","confidence":1.0}
+      ]
+    }
+  ]
+}
