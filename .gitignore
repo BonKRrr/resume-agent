@@ -9,6 +9,7 @@
 build/
 bin/
 out/
+out_llm_cache/
 .vscode/
 .DS_Store
 thumbs.db
