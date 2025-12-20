@@ -1,0 +1,27 @@
+{
+  "posting_id": "001",
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Must have: proficiency in C/C++ and debugging on Windows or Linux.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        { "raw": "C", "canonical": "C", "confidence": 0.90 },
+        { "raw": "C++", "canonical": "C++", "confidence": 0.92 },
+        { "raw": "Windows", "canonical": "Windows", "confidence": 0.80 },
+        { "raw": "Linux", "canonical": "Linux", "confidence": 0.82 }
+      ]
+    },
+    {
+      "span_type": "preferred",
+      "span_text": "Nice to have: SQL and AWS.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        { "raw": "SQL", "canonical": "SQL", "confidence": 0.78 },
+        { "raw": "AWS", "canonical": "AWS", "confidence": 0.76 }
+      ]
+    }
+  ]
+}

@@ -1,10 +1,13 @@
 #include "commands/analyze.hpp"
+#include "llm/MockLLMClient.hpp"
+#include "llm/OllamaLLMClient.hpp"
+#include "llm/LLMClient.hpp"
+
 #include "jobs/JobCorpus.hpp"
 #include "jobs/RequirementExtractor.hpp"
 #include "jobs/TextUtil.hpp"
 #include "jobs/EmbeddingIndex.hpp"
 #include "emb/MiniLmEmbedder.hpp"
-#include "llm/LLMClient.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -34,15 +37,14 @@ static std::string get_arg(int argc, char** argv, const std::string& key, const 
 }
 
 struct Printer {
-    std::ostream* a = nullptr; // stdout
-    std::ostream* b = nullptr; // optional file
+    std::ostream* a = nullptr;
+    std::ostream* b = nullptr;
     template <typename T>
     Printer& operator<<(const T& v) {
         if (a) (*a) << v;
         if (b) (*b) << v;
         return *this;
     }
-    // support std::endl
     Printer& operator<<(std::ostream& (*manip)(std::ostream&)) {
         if (a) manip(*a);
         if (b) manip(*b);
@@ -54,9 +56,7 @@ static bool open_out(std::ofstream& out, const std::string& out_path) {
     if (out_path.empty()) return false;
     try {
         fs::path p(out_path);
-        if (p.has_parent_path()) {
-            fs::create_directories(p.parent_path());
-        }
+        if (p.has_parent_path()) fs::create_directories(p.parent_path());
         out.open(p, std::ios::out | std::ios::trunc);
         return (bool)out;
     } catch (...) {
@@ -90,12 +90,10 @@ static void print_reqs(Printer& pr, const std::string& id, const ExtractedReqs& 
     }
 }
 
-// ---------- Day 3: RoleProfile scaffolding ----------
+// ---------- Day 3 helpers ----------
 
 static std::string to_lower_ascii(std::string s) {
-    for (char& c : s) {
-        if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
-    }
+    for (char& c : s) if (c >= 'A' && c <= 'Z') c = (char)(c - 'A' + 'a');
     return s;
 }
 
@@ -108,11 +106,9 @@ static std::string trim_ascii(const std::string& s) {
 }
 
 static std::string canonicalize_skill(const std::string& raw) {
-    // Minimal canonicalization for Day 3; expand later.
     std::string s = trim_ascii(raw);
     s = to_lower_ascii(s);
 
-    // common quick aliases
     if (s == "c++17" || s == "c++20" || s == "c++14" || s == "c++11") return "c++";
     if (s == "cpp") return "c++";
     if (s == "js") return "javascript";
@@ -123,10 +119,22 @@ static std::string canonicalize_skill(const std::string& raw) {
 }
 
 static double span_weight_from_category(const std::string& cat) {
-    // For now, categories from RequirementExtractor are treated as "requirement-ish".
-    // You can refine later once you add real span typing from LLM segmentation.
     (void)cat;
     return 1.0;
+}
+
+static double span_weight_from_span_type(const std::string& t) {
+    if (t == "requirement") return 1.0;
+    if (t == "preferred") return 0.6;
+    if (t == "responsibility") return 0.4;
+    return 0.2;
+}
+
+static double strength_weight(const std::string& s) {
+    if (s == "must") return 1.0;
+    if (s == "should") return 0.7;
+    if (s == "nice") return 0.4;
+    return 0.6;
 }
 
 static std::string json_escape(const std::string& s) {
@@ -143,9 +151,7 @@ static std::string json_escape(const std::string& s) {
                     oss << "\\u";
                     const char* hex = "0123456789abcdef";
                     oss << "00" << hex[(c >> 4) & 0xF] << hex[c & 0xF];
-                } else {
-                    oss << c;
-                }
+                } else oss << c;
         }
     }
     return oss.str();
@@ -153,19 +159,19 @@ static std::string json_escape(const std::string& s) {
 
 struct Mention {
     std::string posting_id;
-    std::string category;
+    std::string category;   // for non-LLM mode
     std::string raw;
     std::string canonical;
-    std::string strength;   // "must"|"should"|"nice"|"unknown" (Day 3 placeholder)
-    std::string polarity;   // "positive"|"negated" (Day 3 placeholder)
-    double confidence;      // 0..1
-    double contrib;         // for weighting
+    std::string strength;
+    std::string polarity;
+    double confidence = 0.0;
+    double contrib = 0.0;
 };
 
 struct SkillAgg {
-    int raw_count = 0;      // number of postings where present
+    int raw_count = 0;
     double sum_contrib = 0.0;
-    std::vector<std::string> evidence; // small sample of raw mentions
+    std::vector<std::string> evidence;
 };
 
 static bool ensure_dir(const fs::path& p) {
@@ -234,7 +240,6 @@ static void write_profile_json(
     }
     f << "  },\n";
 
-    // Small evidence samples (optional but nice for explainability)
     f << "  \"evidence\": {\n";
     size_t written = 0;
     for (const auto& kv : weights_sorted) {
@@ -249,7 +254,6 @@ static void write_profile_json(
         f << "]";
         written++;
         f << (written < weights_sorted.size() ? ",\n" : "\n");
-        // keep file smaller; you can remove this cap later
         if (written >= 50) break;
     }
     f << "  }\n";
@@ -257,26 +261,91 @@ static void write_profile_json(
     f << "}\n";
 }
 
+// --- NEW: shrink what you send to the LLM (big speed win) ---
+static std::string shrink_posting_for_llm(const std::string& raw) {
+    // Keep only relevant sections; if nothing found, truncate.
+    std::string lower = to_lower_ascii(raw);
+
+    struct Key { const char* k; };
+    const Key starts[] = {
+        {"requirements"}, {"requirement"}, {"qualifications"}, {"qualification"},
+        {"responsibilities"}, {"responsibility"},
+        {"what you will do"}, {"what you'll do"}, {"what you bring"},
+        {"preferred"}, {"nice to have"}, {"nice-to-have"}, {"optional"}, {"bonus"}, {"plus"}
+    };
+
+    const Key stops[] = {
+        {"benefits"}, {"perks"}, {"about us"}, {"about the company"},
+        {"equal opportunity"}, {"eeo"}, {"privacy"}, {"legal"}, {"who we are"}
+    };
+
+    auto find_any = [&](const Key* arr, size_t n, size_t from) -> size_t {
+        size_t best = std::string::npos;
+        for (size_t i = 0; i < n; ++i) {
+            size_t pos = lower.find(arr[i].k, from);
+            if (pos != std::string::npos) {
+                if (best == std::string::npos || pos < best) best = pos;
+            }
+        }
+        return best;
+    };
+
+    std::string out;
+    out.reserve(9000);
+
+    // Grab up to 3 blocks starting at recognized headings
+    size_t from = 0;
+    int blocks = 0;
+    while (blocks < 3) {
+        size_t s = find_any(starts, sizeof(starts)/sizeof(starts[0]), from);
+        if (s == std::string::npos) break;
+
+        size_t e = find_any(stops, sizeof(stops)/sizeof(stops[0]), s + 1);
+        if (e == std::string::npos) e = std::min(raw.size(), s + (size_t)4500);
+        else e = std::min(e, s + (size_t)4500);
+
+        if (!out.empty()) out += "\n\n";
+        out += raw.substr(s, e - s);
+
+        from = e;
+        blocks++;
+    }
+
+    if (out.empty()) {
+        // fallback: just truncate raw (still better than huge blobs)
+        size_t cap = std::min(raw.size(), (size_t)8000);
+        out = raw.substr(0, cap);
+    } else {
+        // cap final size
+        if (out.size() > 9000) out.resize(9000);
+    }
+
+    return out;
+}
+
 // ---------------------------------------------------
 
 int cmd_analyze(int argc, char** argv) {
-    std::string role        = get_arg(argc, argv, "--role", "");
-    std::string jobs_dir    = get_arg(argc, argv, "--jobs", "data/jobs/raw");
-    std::string topk_s      = get_arg(argc, argv, "--topk", "25");
+    std::string role         = get_arg(argc, argv, "--role", "");
+    std::string jobs_dir     = get_arg(argc, argv, "--jobs", "data/jobs/raw");
+    std::string topk_s       = get_arg(argc, argv, "--topk", "25");
 
-    std::string emb_path    = get_arg(argc, argv, "--emb", "data/embeddings/jobs.bin");
-    std::string model       = get_arg(argc, argv, "--model", "models/emb/model.onnx");
-    std::string vocab       = get_arg(argc, argv, "--vocab", "models/emb/vocab.txt");
+    // LLM args
+    std::string llm_mock_dir = get_arg(argc, argv, "--llm_mock", "");
+    std::string llm_model    = get_arg(argc, argv, "--llm_model", "llama3.1:8b");
+    std::string llm_cache    = get_arg(argc, argv, "--llm_cache", "out/llm_cache");
 
-    std::string min_score_s = get_arg(argc, argv, "--min_score", "0.30");
-    std::string out_path    = get_arg(argc, argv, "--out", "");
+    std::string emb_path     = get_arg(argc, argv, "--emb", "data/embeddings/jobs.bin");
+    std::string model        = get_arg(argc, argv, "--model", "models/emb/model.onnx");
+    std::string vocab        = get_arg(argc, argv, "--vocab", "models/emb/vocab.txt");
 
-    // Day 3 flags
-    bool use_llm   = has_flag(argc, argv, "--llm");
+    std::string min_score_s  = get_arg(argc, argv, "--min_score", "0.30");
+    std::string out_path     = get_arg(argc, argv, "--out", "");
+
+    bool use_llm    = has_flag(argc, argv, "--llm");
     bool do_profile = has_flag(argc, argv, "--profile");
     std::string outdir_s = get_arg(argc, argv, "--outdir", "out");
 
-    // rerank knobs (Day 2 constants)
     const double alpha       = 0.70;
     const size_t topn_seed   = 10;
     const size_t topx_tokens = 30;
@@ -288,23 +357,20 @@ int cmd_analyze(int argc, char** argv) {
     }
 
     double min_score = 0.0;
-    try {
-        min_score = std::stod(min_score_s);
-    } catch (...) {
+    try { min_score = std::stod(min_score_s); }
+    catch (...) {
         std::cerr << "error: invalid --min_score\n";
         return 1;
     }
 
     size_t topk = 0;
-    try {
-        topk = (size_t)std::stoul(topk_s);
-    } catch (...) {
+    try { topk = (size_t)std::stoul(topk_s); }
+    catch (...) {
         std::cerr << "error: invalid --topk\n";
         return 1;
     }
     if (topk == 0) topk = 1;
 
-    // Optional file output (existing Day 2 behavior)
     std::ofstream out;
     bool write_out = false;
     if (!out_path.empty()) {
@@ -320,14 +386,10 @@ int cmd_analyze(int argc, char** argv) {
     pr.b = write_out ? (std::ostream*)&out : nullptr;
 
     if (write_out) {
-        try {
-            pr << "OUT: " << fs::absolute(fs::path(out_path)).string() << "\n";
-        } catch (...) {
-            pr << "OUT: " << out_path << "\n";
-        }
+        try { pr << "OUT: " << fs::absolute(fs::path(out_path)).string() << "\n"; }
+        catch (...) { pr << "OUT: " << out_path << "\n"; }
     }
 
-    // Prepare outdir
     fs::path outdir(outdir_s);
     if (do_profile) {
         if (!ensure_dir(outdir)) {
@@ -342,12 +404,10 @@ int cmd_analyze(int argc, char** argv) {
     pr << "JOBS_DIR: " << jobs_dir << "\n";
     pr << "POSTINGS: " << corpus.postings().size() << "\n";
 
-    // Map id -> posting pointer
     std::unordered_map<std::string, const JobPosting*> by_id;
     by_id.reserve(corpus.postings().size());
     for (const auto& p : corpus.postings()) by_id[p.id] = &p;
 
-    // Token sets + DF
     std::unordered_map<std::string, std::unordered_set<std::string>> post_tokens;
     post_tokens.reserve(corpus.postings().size());
 
@@ -360,7 +420,6 @@ int cmd_analyze(int argc, char** argv) {
         post_tokens.emplace(p.id, std::move(s));
     }
 
-    // Load embedding index
     EmbeddingIndex idx;
     if (!idx.load(emb_path)) {
         std::cerr << "error: failed to load embeddings cache: " << emb_path << "\n";
@@ -368,7 +427,6 @@ int cmd_analyze(int argc, char** argv) {
         return 1;
     }
 
-    // Embed query
     MiniLmEmbedder emb;
     if (!emb.init(model, vocab)) {
         std::cerr << "error: failed to init embedder for query\n";
@@ -381,7 +439,6 @@ int cmd_analyze(int argc, char** argv) {
         return 1;
     }
 
-    // Retrieve more than needed, then filter + rerank
     size_t bigk = std::max(topk, bigk_floor);
     auto hits = idx.topk(q, bigk);
 
@@ -393,7 +450,6 @@ int cmd_analyze(int argc, char** argv) {
         return 0;
     }
 
-    // Filter by min_score
     std::vector<decltype(hits)::value_type> kept;
     kept.reserve(hits.size());
     for (const auto& h : hits) {
@@ -414,7 +470,6 @@ int cmd_analyze(int argc, char** argv) {
         return std::log((1.0 + (double)M) / (1.0 + (double)d));
     };
 
-    // Build "role vocab" from top seeds
     const size_t seedN = std::min(topn_seed, kept.size());
     std::unordered_map<std::string, int> tf_top;
     tf_top.reserve(1024);
@@ -443,7 +498,6 @@ int cmd_analyze(int argc, char** argv) {
     top_tokens.reserve(scored.size() * 2);
     for (const auto& ts : scored) top_tokens.insert(ts.tok);
 
-    // Rerank
     struct RankedHit {
         std::string job_id;
         double emb_score;
@@ -475,21 +529,29 @@ int cmd_analyze(int argc, char** argv) {
 
     pr << "TOPK: " << ranked.size() << "\n";
 
-    // LLM slot (Day 3: wired, Null by default)
+    // LLM clients
     llm::NullLLMClient null_llm;
-    llm::LLMClient* llm_client = use_llm ? (llm::LLMClient*)&null_llm : nullptr;
-    (void)llm_client; // will be used once you implement a real adapter
+    llm::MockLLMClient mock_llm(llm_mock_dir.empty() ? "llm_mock" : llm_mock_dir);
+    llm::OllamaLLMClient ollama_llm(llm_model, llm_cache);
+
+    llm::LLMClient* llm_client = nullptr;
+
+    if (use_llm) {
+        if (!llm_mock_dir.empty()) {
+            llm_client = (llm::LLMClient*)&mock_llm;
+        } else {
+            llm_client = (llm::LLMClient*)&ollama_llm;
+        }
+    }
 
     RequirementExtractor ex;
 
-    // Day 3 aggregation buffers
     std::vector<Mention> all_mentions;
     all_mentions.reserve(ranked.size() * 32);
 
-    // skill -> aggregate
     std::unordered_map<std::string, SkillAgg> agg;
 
-    // presence tracking to ensure "once per posting per skill"
+    // posting_id -> canonical skill -> best mention
     std::unordered_map<std::string, std::unordered_map<std::string, Mention>> best_by_posting;
     best_by_posting.reserve(ranked.size());
 
@@ -504,67 +566,92 @@ int cmd_analyze(int argc, char** argv) {
            << " lex=" << rh.lex_score
            << "\n";
 
-        auto reqs = ex.extract(it->second->raw_text);
-        print_reqs(pr, it->second->id, reqs);
+        const std::string& post_id = it->second->id;
+        const std::string& text    = it->second->raw_text;
 
-        if (!do_profile) continue;
+        if (!use_llm) {
+            // ------- Non-LLM path -------
+            auto reqs = ex.extract(text);
+            print_reqs(pr, post_id, reqs);
 
-        // Convert extracted requirements into mentions
-        for (const auto& [cat, items] : reqs.by_category) {
-            if (items.empty()) continue;
+            if (!do_profile) continue;
 
-            const double sw = span_weight_from_category(cat);
-            for (const auto& raw_skill : items) {
-                std::string canon = canonicalize_skill(raw_skill);
-                if (canon.empty()) continue;
+            for (const auto& [cat, items] : reqs.by_category) {
+                if (items.empty()) continue;
 
-                Mention m;
-                m.posting_id = it->second->id;
-                m.category   = cat;
-                m.raw        = raw_skill;
-                m.canonical  = canon;
+                const double sw = span_weight_from_category(cat);
+                for (const auto& raw_skill : items) {
+                    std::string canon = canonicalize_skill(raw_skill);
+                    if (canon.empty()) continue;
 
-                // Day 3 placeholders until LLM span parsing exists
-                m.strength   = "must";
-                m.polarity   = "positive";
-                m.confidence = 1.0;
+                    Mention m;
+                    m.posting_id = post_id;
+                    m.category   = cat;
+                    m.raw        = raw_skill;
+                    m.canonical  = canon;
 
-                const double strength_w = 1.0; // must
-                m.contrib = sw * strength_w * m.confidence;
+                    m.strength   = "must";
+                    m.polarity   = "positive";
+                    m.confidence = 1.0;
+                    m.contrib    = sw * 1.0 * m.confidence;
 
-                // choose best mention per posting per canonical skill
-                auto& mp = best_by_posting[m.posting_id];
-                auto it2 = mp.find(m.canonical);
-                if (it2 == mp.end() || m.contrib > it2->second.contrib) {
-                    mp[m.canonical] = m;
+                    auto& mp = best_by_posting[m.posting_id];
+                    auto it2 = mp.find(m.canonical);
+                    if (it2 == mp.end() || m.contrib > it2->second.contrib) mp[m.canonical] = m;
+                }
+            }
+        } else {
+            // ------- LLM path (B): ONE CALL PER POSTING -------
+            if (!do_profile) continue;
+            if (!llm_client) continue;
+
+            std::string shrunk = shrink_posting_for_llm(text);
+            auto evidences = llm_client->analyze_posting(post_id, shrunk);
+
+            for (const auto& ev : evidences) {
+                if (ev.polarity == "negated") continue;
+
+                const double sw  = span_weight_from_span_type(ev.span_type);
+                const double stw = strength_weight(ev.strength);
+
+                for (const auto& sh : ev.skills) {
+                    std::string canon = canonicalize_skill(!sh.canonical.empty() ? sh.canonical : sh.raw);
+                    if (canon.empty()) continue;
+
+                    Mention m;
+                    m.posting_id = post_id;
+                    m.category   = "";
+                    m.raw        = sh.raw;
+                    m.canonical  = canon;
+
+                    m.strength   = ev.strength.empty() ? "unknown" : ev.strength;
+                    m.polarity   = ev.polarity.empty() ? "positive" : ev.polarity;
+                    m.confidence = sh.confidence;
+                    m.contrib    = sw * stw * m.confidence;
+
+                    auto& mp = best_by_posting[m.posting_id];
+                    auto it2 = mp.find(m.canonical);
+                    if (it2 == mp.end() || m.contrib > it2->second.contrib) mp[m.canonical] = m;
                 }
             }
         }
     }
 
     if (do_profile) {
-        // flatten best_by_posting into all_mentions
         for (auto& pkv : best_by_posting) {
-            for (auto& skv : pkv.second) {
-                all_mentions.push_back(skv.second);
-            }
+            for (auto& skv : pkv.second) all_mentions.push_back(skv.second);
         }
 
-        // aggregate
         for (const auto& m : all_mentions) {
             if (m.polarity == "negated") continue;
-
             auto& a = agg[m.canonical];
             a.raw_count += 1;
             a.sum_contrib += m.contrib;
-
-            if (a.evidence.size() < 3) {
-                a.evidence.push_back(m.raw);
-            }
+            if (a.evidence.size() < 3) a.evidence.push_back(m.raw);
         }
 
         const int N = (int)ranked.size();
-        // compute weights
+
         std::vector<std::pair<std::string, double>> weights;
         weights.reserve(agg.size());
 
@@ -577,12 +664,9 @@ int cmd_analyze(int argc, char** argv) {
             double freq = (N > 0) ? ((double)a.raw_count / (double)N) : 0.0;
             double avg_contrib = (a.raw_count > 0) ? (a.sum_contrib / (double)a.raw_count) : 0.0;
 
-            // simple combined weight (tunable)
             double w = 0.7 * freq + 0.3 * avg_contrib;
-
             weights.push_back({skill, w});
 
-            // buckets (tweak later)
             if (freq >= 0.55 && w >= 0.75) core.push_back(skill);
             else if (freq >= 0.25 && w >= 0.45) secondary.push_back(skill);
             else nice.push_back(skill);
@@ -591,14 +675,11 @@ int cmd_analyze(int argc, char** argv) {
         std::sort(weights.begin(), weights.end(),
                   [](const auto& a, const auto& b){ return a.second > b.second; });
 
-        auto sort_alpha = [](std::vector<std::string>& v) {
-            std::sort(v.begin(), v.end());
-        };
+        auto sort_alpha = [](std::vector<std::string>& v) { std::sort(v.begin(), v.end()); };
         sort_alpha(core);
         sort_alpha(secondary);
         sort_alpha(nice);
 
-        // write artifacts
         fs::path mentions_path = outdir / "mentions.jsonl";
         fs::path profile_path  = outdir / "profile.json";
 

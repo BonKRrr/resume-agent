@@ -29,7 +29,11 @@ JOBS_SRC := \
 	src\jobs\EmbeddingIndex.cpp \
 	src\jobs\RequirementExtractor.cpp
 
-SRCS := $(APP_SRC) $(CMD_SRC) $(IO_SRC) $(JOBS_SRC) $(EMB_SRC)
+LLM_SRC := \
+	src\llm\MockLLMClient.cpp \
+	src\llm\OllamaLLMClient.cpp
+
+SRCS := $(APP_SRC) $(CMD_SRC) $(IO_SRC) $(JOBS_SRC) $(EMB_SRC) $(LLM_SRC)
 
 all:
 	call $(VCVARS) && $(CXX) $(CXXFLAGS) $(SRCS) /Fe:$(TARGET) $(LDFLAGS)

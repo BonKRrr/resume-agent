@@ -1,0 +1,5 @@
+{
+  "model": "llama3.1-8b-cpu:latest",
+  "prompt": "Return ONLY JSON: {\"ok\":true}",
+  "stream": false
+}

@@ -1,0 +1,35 @@
+{
+  "posting_id": "file_03",
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Required: Build backend services on Linux; strong C++ and systems programming.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        { "raw": "C++", "canonical": "C++", "confidence": 0.93 },
+        { "raw": "Linux", "canonical": "Linux", "confidence": 0.90 },
+        { "raw": "systems programming", "canonical": "Systems programming", "confidence": 0.80 }
+      ]
+    },
+    {
+      "span_type": "preferred",
+      "span_text": "Preferred: Docker/Kubernetes experience.",
+      "polarity": "positive",
+      "strength": "should",
+      "skills": [
+        { "raw": "Docker", "canonical": "Docker", "confidence": 0.84 },
+        { "raw": "Kubernetes", "canonical": "Kubernetes", "confidence": 0.82 }
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "We do not require Rust for this role.",
+      "polarity": "negated",
+      "strength": "unknown",
+      "skills": [
+        { "raw": "Rust", "canonical": "Rust", "confidence": 0.70 }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "posting_id": "file_00",
+  "evidence": [
+    {
+      "span_type": "requirement",
+      "span_text": "Requirements: Strong C++ (modern C++ preferred) and Linux experience.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        { "raw": "C++17", "canonical": "C++", "confidence": 0.96 },
+        { "raw": "Linux", "canonical": "Linux", "confidence": 0.92 }
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Experience with multithreading/concurrency and performance optimization.",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        { "raw": "multithreading", "canonical": "Multithreading", "confidence": 0.90 },
+        { "raw": "concurrency", "canonical": "Concurrency", "confidence": 0.88 },
+        { "raw": "performance optimization", "canonical": "Performance", "confidence": 0.84 }
+      ]
+    },
+    {
+      "span_type": "preferred",
+      "span_text": "Nice to have: Docker and AWS.",
+      "polarity": "positive",
+      "strength": "nice",
+      "skills": [
+        { "raw": "Docker", "canonical": "Docker", "confidence": 0.80 },
+        { "raw": "AWS", "canonical": "AWS", "confidence": 0.78 }
+      ]
+    }
+  ]
+}

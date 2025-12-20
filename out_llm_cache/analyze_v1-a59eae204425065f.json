@@ -1,0 +1,110 @@
+{
+  "evidence": [
+    {
+      "span_type": "responsibility",
+      "span_text": "Work in a cross-functional, agile team closely together with designers and product owners to deliver the services for our learning system Envision",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby-on-rails","confidence":1.0},
+        {"raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "architect and implement new projects and features and deliver them into production",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby-on-rails","confidence":1.0},
+        {"raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Identify and implement innovative solutions and ensure long-term stability and maintainability of our code base",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby-on-rails","confidence":1.0},
+        {"raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Ensure code quality and participate in code reviews",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby-on-rails","confidence":1.0},
+        {"raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "responsibility",
+      "span_text": "Optimize our backend services with regards to performance and stability",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby-on-rails","confidence":1.0},
+        {"raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "5+ years experience in software development",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"software development","canonical":"software-development","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Very good knowledge in Ruby on Rails development, at least 3+ years experience",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Ruby on Rails development","canonical":"ruby-on-rails","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Good knowledge in Web technologies (HTML, CSS, Javascript)",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "requirement",
+      "span_text": "Software development talent proven by great work results/experience, hobby projects or open source contribution",
+      "polarity": "positive",
+      "strength": "must",
+      "skills": [
+        {"raw":"software development","canonical":"software-development","confidence":1.0}
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "OPTIONAL: Experience with NoSQL databases is a plus",
+      "polarity": "negated",
+      "strength": "nice",
+      "skills": [
+        {"raw":"NoSQL databases","canonical":"nosql-databases","confidence":0.8}
+      ]
+    },
+    {
+      "span_type": "other",
+      "span_text": "OPTIONAL: understanding of lean and agile practices, in particular Scrum and Kanban ",
+      "polarity": "negated",
+      "strength": "nice",
+      "skills": [
+        {"raw":"lean and agile practices","canonical":"lean-and-agile-practices","confidence":0.8},
+        {"raw":"Scrum","canonical":"scrum","confidence":0.6},
+        {"raw":"Kanban","canonical":"kanban","confidence":0.6}
+      ]
+    }
+  ]
+}

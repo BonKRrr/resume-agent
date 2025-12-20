@@ -1,0 +1,5 @@
+{
+  "model": "llama3.1-8b-cpu",
+  "prompt": "Hello",
+  "stream": false
+}
