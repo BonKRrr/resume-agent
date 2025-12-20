@@ -998,9 +998,39 @@ int cmd_analyze(int argc, char** argv) {
             double w = 0.7 * freq + 0.3 * avg_contrib;
             weights.push_back({skill, w});
 
-            if (freq >= 0.55 && w >= 0.75) core.push_back(skill);
-            else if (freq >= 0.25 && w >= 0.45) secondary.push_back(skill);
-            else nice.push_back(skill);
+            // --- adaptive thresholds based on sample size ---
+            double core_freq_cutoff =
+                (N >= 20) ? 0.55 :
+                (N >= 10) ? 0.50 :
+                            0.40;
+
+            double core_weight_cutoff =
+                (N >= 20) ? 0.75 :
+                (N >= 10) ? 0.65 :
+                            0.55;
+
+            double secondary_freq_cutoff =
+                (N >= 20) ? 0.25 :
+                (N >= 10) ? 0.20 :
+                            0.15;
+
+            double secondary_weight_cutoff =
+                (N >= 20) ? 0.45 :
+                (N >= 10) ? 0.40 :
+                            0.35;
+
+            // --- classification ---
+            if (freq >= core_freq_cutoff && w >= core_weight_cutoff) {
+                core.push_back(skill);
+            }
+            else if (freq >= secondary_freq_cutoff && w >= secondary_weight_cutoff) {
+                secondary.push_back(skill);
+            }
+            else {
+                nice.push_back(skill);
+            }
+
+
         }
 
         std::sort(weights.begin(), weights.end(),

@@ -1,1 +1,3 @@
 Title: C++ Backend Engineer
+Must have C++ coding skill
+Must know algorithms
