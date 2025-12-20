@@ -13,7 +13,12 @@ APP_SRC := app\main.cpp
 CMD_SRC := \
 	src\commands\resumeDump.cpp \
 	src\commands\analyze.cpp \
-	src\commands\embed.cpp
+	src\commands\embed.cpp \
+	src\commands\build.cpp
+
+RESUME_SRC := \
+	src\resume\Scorer.cpp \
+	src\resume\BulletScoresArtifact.cpp
 
 EMB_SRC := \
 	src\emb\WordPieceTokenizer.cpp \
@@ -33,7 +38,7 @@ LLM_SRC := \
 	src\llm\MockLLMClient.cpp \
 	src\llm\OllamaLLMClient.cpp
 
-SRCS := $(APP_SRC) $(CMD_SRC) $(IO_SRC) $(JOBS_SRC) $(EMB_SRC) $(LLM_SRC)
+SRCS := $(APP_SRC) $(CMD_SRC) $(RESUME_SRC) $(IO_SRC) $(JOBS_SRC) $(EMB_SRC) $(LLM_SRC)
 
 all:
 	call $(VCVARS) && $(CXX) $(CXXFLAGS) $(SRCS) /Fe:$(TARGET) $(LDFLAGS)
