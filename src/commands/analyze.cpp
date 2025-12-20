@@ -249,6 +249,7 @@ static void write_profile_json(
     write_str_array("secondary_skills", secondary);
     write_str_array("nice_to_have", nice);
 
+    // skill_weights
     f << "  \"skill_weights\": {\n";
     for (size_t i = 0; i < weights_sorted.size(); ++i) {
         const auto& kv = weights_sorted[i];
@@ -257,26 +258,36 @@ static void write_profile_json(
     }
     f << "  },\n";
 
+    // evidence (cap to 50 keys, no trailing comma ever)
     f << "  \"evidence\": {\n";
-    size_t written = 0;
+
+    std::vector<std::string> keys;
+    keys.reserve(std::min<size_t>(50, weights_sorted.size()));
+
     for (const auto& kv : weights_sorted) {
-        auto it = agg.find(kv.first);
-        if (it == agg.end()) continue;
+        if (keys.size() >= 50) break;
+        if (agg.find(kv.first) == agg.end()) continue;
+        keys.push_back(kv.first);
+    }
+
+    for (size_t i = 0; i < keys.size(); ++i) {
+        const std::string& k = keys[i];
+        auto it = agg.find(k);
         const auto& ev = it->second.evidence;
-        f << "    \"" << json_escape(kv.first) << "\": [";
+
+        f << "    \"" << json_escape(k) << "\": [";
         for (size_t j = 0; j < ev.size(); ++j) {
             if (j) f << ", ";
             f << "\"" << json_escape(ev[j]) << "\"";
         }
         f << "]";
-        written++;
-        f << (written < weights_sorted.size() ? ",\n" : "\n");
-        if (written >= 50) break;
+        f << (i + 1 < keys.size() ? ",\n" : "\n");
     }
-    f << "  }\n";
 
+    f << "  }\n";
     f << "}\n";
 }
+
 
 // --- shrink what you send to the LLM ---
 static std::string shrink_posting_for_llm(const std::string& raw) {

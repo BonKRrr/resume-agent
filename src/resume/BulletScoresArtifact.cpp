@@ -1,10 +1,17 @@
-// src/resume/BulletScoresArtifact.cpp
 #include "resume/BulletScoresArtifact.hpp"
 
 #include <fstream>
 #include <stdexcept>
 
 namespace resume {
+
+static const char* match_type_str(MatchType t) {
+    switch (t) {
+        case MatchType::Exact: return "exact";
+        case MatchType::Semantic: return "semantic";
+        default: return "unknown";
+    }
+}
 
 static nlohmann::json scored_bullet_to_json(const ScoredBullet& b) {
     nlohmann::json j;
@@ -24,6 +31,19 @@ static nlohmann::json scored_bullet_to_json(const ScoredBullet& b) {
     j["matched_skills"] = matched;
 
     j["core_hits"] = b.core_hits;
+
+    nlohmann::json evidence = nlohmann::json::array();
+    for (const auto& ev : b.match_evidence) {
+        evidence.push_back({
+            {"type", match_type_str(ev.type)},
+            {"source", ev.source},
+            {"matched_skill", ev.matched_skill},
+            {"similarity", ev.similarity},
+            {"profile_weight", ev.profile_weight},
+            {"contribution", ev.contribution}
+        });
+    }
+    j["match_evidence"] = evidence;
 
     j["score"] = {
         {"raw_skill_sum", b.score.raw_skill_sum},

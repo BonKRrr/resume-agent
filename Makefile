@@ -18,7 +18,8 @@ CMD_SRC := \
 
 RESUME_SRC := \
 	src\resume\Scorer.cpp \
-	src\resume\BulletScoresArtifact.cpp
+	src\resume\BulletScoresArtifact.cpp \
+	src\resume\SemanticMatcher.cpp
 
 EMB_SRC := \
 	src\emb\WordPieceTokenizer.cpp \
