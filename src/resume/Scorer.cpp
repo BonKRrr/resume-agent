@@ -63,18 +63,10 @@ static double safe_norm(int tag_count) {
     return std::sqrt(1.0 + static_cast<double>(tag_count));
 }
 
-static double clamp01(double x) {
-    if (x < 0.0) return 0.0;
-    if (x > 1.0) return 1.0;
-    return x;
-}
-
-// Scale semantic similarity into [0,1] so borderline matches contribute less.
-// Exact matches effectively have scale=1.
-static double semantic_scale(double sim, double thr) {
-    if (sim <= thr) return 0.0;
-    double x = (sim - thr) / (1.0 - thr);
-    return clamp01(x);
+// Semantic contribution:
+// contrib = profile_weight * semantic_weight_scale * similarity
+static double semantic_contribution(const ScoreConfig& cfg, double profile_weight, double sim) {
+    return profile_weight * cfg.semantic_weight_scale * sim;
 }
 
 static void finalize_and_push(
@@ -141,7 +133,7 @@ static void finalize_and_push(
             continue;
         }
 
-        // 2) Semantic match (embedding fallback)
+        // 2) Semantic match (embedding fallback) ONLY when exact failed
         if (cfg.semantic_enabled && semantic) {
             SemanticHit hit = semantic->best_match(tag);
             if (!hit.ok) continue;
@@ -155,11 +147,12 @@ static void finalize_and_push(
             if (!credited_skills.insert(matched_skill).second) continue;
 
             const double profile_w = pwit->second;
-            const double scale = semantic_scale(hit.similarity, cfg.semantic_threshold);
-            const double contrib = profile_w * scale;
+            const double sim = hit.similarity;
 
-            // If scale is extremely small, skip entirely to reduce noise.
-            if (contrib <= 0.0) continue;
+            if (sim < cfg.semantic_threshold) continue;
+
+            const double contrib = semantic_contribution(cfg, profile_w, sim);
+            if (contrib < cfg.semantic_min_contribution) continue;
 
             raw += contrib;
             sb.matched_skills.push_back(MatchedSkill{matched_skill, contrib});
@@ -168,7 +161,7 @@ static void finalize_and_push(
             ev.type = MatchType::Semantic;
             ev.source = tag;
             ev.matched_skill = matched_skill;
-            ev.similarity = hit.similarity;
+            ev.similarity = sim;
             ev.profile_weight = profile_w;
             ev.contribution = contrib;
             sb.match_evidence.push_back(std::move(ev));

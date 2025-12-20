@@ -43,16 +43,19 @@ struct ScoreConfig {
 
     // semantic matching (embedding fallback)
     bool semantic_enabled = false;
-    double semantic_threshold = 0.66; // accept match if cosine >= threshold
+    double semantic_threshold = 0.66;     // accept match if cosine >= threshold
 
-    // contribution scaling for semantic matches:
-    // contrib = profile_weight * scale(similarity, threshold)
-    // exact matches use scale=1.
+    // IMPORTANT: semantic matches should help, but never dominate exact.
+    // contribution = profile_weight * semantic_weight_scale * similarity
+    double semantic_weight_scale = 0.25;
+
+    // skip extremely tiny semantic contributions (noise guard)
+    double semantic_min_contribution = 0.01;
 };
 
 struct MatchedSkill {
-    std::string skill; // profile skill key
-    double weight = 0.0; // contribution credited (not the raw profile weight)
+    std::string skill;     // profile skill key
+    double weight = 0.0;   // contribution credited (not the raw profile weight)
 };
 
 struct BulletScoreBreakdown {

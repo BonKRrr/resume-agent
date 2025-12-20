@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -56,6 +57,58 @@ static std::string norm_and_canon(const std::string& s) {
     return canonicalize_skill(normalize_key(s));
 }
 
+// ---------- NEW: filter out junk semantic targets ----------
+
+static bool looks_like_real_skill_target(const std::string& s) {
+    // exact allowlist for common short true-skills
+    static const std::unordered_set<std::string> allow = {
+        "c", "c++", "c#", "java", "python", "rust", "go",
+        "sql", "linux", "git", "docker", "kubernetes",
+        "aws", "gcp", "azure",
+        "grpc", "http", "rest",
+        "mongodb", "postgres", "mysql"
+    };
+
+    // exact banlist of generic nouns that embeddings love to over-match
+    static const std::unordered_set<std::string> ban = {
+        "engineer", "engineers", "developer", "developers",
+        "development", "software", "coding",
+        "experience", "best practices", "practices",
+        "talent", "team", "teams",
+        "framework", "frameworks" // too generic as a semantic target
+    };
+
+    if (s.empty()) return false;
+
+    // keep allowlisted items
+    if (allow.find(s) != allow.end()) return true;
+
+    // kill obvious junk
+    if (ban.find(s) != ban.end()) return false;
+
+    // require at least one reasonably long token unless allowlisted
+    // (prevents "dev", "eng", etc.)
+    bool has_long_token = false;
+    int token_count = 0;
+    size_t i = 0;
+    while (i < s.size()) {
+        while (i < s.size() && std::isspace(static_cast<unsigned char>(s[i]))) ++i;
+        if (i >= s.size()) break;
+        size_t j = i;
+        while (j < s.size() && !std::isspace(static_cast<unsigned char>(s[j]))) ++j;
+        token_count++;
+        if ((j - i) >= 4) has_long_token = true;
+        i = j;
+    }
+
+    // single-token generic skills are the most error-prone semantically
+    // (e.g. "development", "design", "engineers"). We already banned some,
+    // but also require multi-token unless it’s allowlisted.
+    if (token_count <= 1) return false;
+
+    return has_long_token;
+}
+
 class SemanticMatcherImpl final : public SemanticMatcher {
 public:
     SemanticMatcherImpl(EmbeddingIndex idx, const MiniLmEmbedder* emb, SemanticMatcherConfig cfg)
@@ -76,14 +129,17 @@ public:
         if (hits.empty()) return SemanticHit{};
 
         const auto& h = hits[0];
+
         SemanticHit out;
-        out.ok = (h.score >= m_cfg.threshold);
-        out.skill = h.job_id;   // we store skill string in job_id
         out.similarity = h.score;
-        if (!out.ok) {
-            out.skill.clear();
-            out.similarity = h.score;
+
+        if (h.score < m_cfg.threshold) {
+            out.ok = false;
+            return out;
         }
+
+        out.ok = true;
+        out.skill = h.job_id;   // we store skill string in job_id
         return out;
     }
 
@@ -102,12 +158,15 @@ static EmbeddingIndex build_index_from_profile(
 
     for (const auto& kv : profile_skill_weights) {
         const std::string s = norm_and_canon(kv.first);
-        if (!s.empty()) skills.push_back(s);
+        if (s.empty()) continue;
+
+        // Only include high-quality targets to prevent junk matches like "engineers"
+        if (!looks_like_real_skill_target(s)) continue;
+
+        skills.push_back(s);
     }
 
-    // Deduplicate skills while keeping deterministic order:
-    // since profile_skill_weights is a std::map, iteration is sorted by key.
-    // After normalization, duplicates can appear; remove them deterministically.
+    // Deduplicate deterministically
     std::sort(skills.begin(), skills.end());
     skills.erase(std::unique(skills.begin(), skills.end()), skills.end());
 
@@ -117,16 +176,17 @@ static EmbeddingIndex build_index_from_profile(
     for (const auto& s : skills) {
         std::vector<float> v = embedder.embed(s);
         if (v.empty()) continue;
+
         if (dim == 0) dim = v.size();
         if (v.size() != dim) {
             throw std::runtime_error("SemanticMatcher: inconsistent embedding dim");
         }
+
         packed.insert(packed.end(), v.begin(), v.end());
     }
 
     EmbeddingIndex idx;
     if (dim == 0 || skills.empty()) {
-        // empty index
         return idx;
     }
 
@@ -143,7 +203,6 @@ std::unique_ptr<SemanticMatcher> build_profile_semantic_matcher(
     if (!cfg.cache_path.empty()) {
         EmbeddingIndex cached;
         if (cached.load(cfg.cache_path)) {
-            // NOTE: We don't validate "same profile" here; deterministic, but user-controlled cache.
             return std::make_unique<SemanticMatcherImpl>(std::move(cached), &embedder, cfg);
         }
     }
