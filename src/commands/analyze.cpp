@@ -105,26 +105,6 @@ static std::string trim_ascii(const std::string& s) {
     return s.substr(i, j - i);
 }
 
-static bool is_space_ascii(char c) {
-    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-}
-
-static std::string collapse_spaces_ascii(const std::string& s) {
-    std::string out;
-    out.reserve(s.size());
-    bool in_ws = false;
-    for (char c : s) {
-        if (is_space_ascii(c)) {
-            if (!in_ws) out.push_back(' ');
-            in_ws = true;
-        } else {
-            out.push_back(c);
-            in_ws = false;
-        }
-    }
-    return trim_ascii(out);
-}
-
 static std::string canonicalize_skill(const std::string& raw) {
     std::string s = trim_ascii(raw);
     s = to_lower_ascii(s);
@@ -170,7 +150,7 @@ static std::string json_escape(const std::string& s) {
                 if ((unsigned char)c < 0x20) {
                     oss << "\\u";
                     const char* hex = "0123456789abcdef";
-                    oss << "00" << hex[((unsigned char)c >> 4) & 0xF] << hex[(unsigned char)c & 0xF];
+                    oss << "00" << hex[(c >> 4) & 0xF] << hex[c & 0xF];
                 } else oss << c;
         }
     }
@@ -281,7 +261,7 @@ static void write_profile_json(
     f << "}\n";
 }
 
-// --- shrink what you send to the LLM (big speed win) ---
+// --- shrink what you send to the LLM ---
 static std::string shrink_posting_for_llm(const std::string& raw) {
     std::string lower = to_lower_ascii(raw);
 
@@ -339,101 +319,28 @@ static std::string shrink_posting_for_llm(const std::string& raw) {
     return out;
 }
 
-// --- LLM output hardening ---
+// --- tokenize the query/role so lex rerank is anchored to what user asked ---
+static std::unordered_set<std::string> tokenize_query(const std::string& role) {
+    std::string norm = textutil::normalize(role);
+    auto toks = textutil::tokenize(norm);
+    auto ntoks = textutil::normalize_tokens(toks);
+    std::unordered_set<std::string> s;
+    s.reserve(ntoks.size());
+    for (auto& t : ntoks) if (!t.empty()) s.insert(t);
 
-static bool contains_substr_case_insensitive(const std::string& hay, const std::string& needle) {
-    if (needle.empty()) return true;
-    std::string h = to_lower_ascii(hay);
-    std::string n = to_lower_ascii(needle);
-    return h.find(n) != std::string::npos;
-}
-
-static std::string normalize_skill_text_for_match(std::string s) {
-    s = to_lower_ascii(s);
-    // turn separators into spaces, collapse whitespace
-    for (char& c : s) {
-        if (c == '-' || c == '_' || c == '/' || c == '(' || c == ')' || c == '[' || c == ']' ||
-            c == '{' || c == '}' || c == ',' || c == ';' || c == ':' || c == '.') {
-            c = ' ';
-        }
+    if (s.find("cpp") != s.end()) {
+        s.erase("cpp");
+        s.insert("c++");
     }
-    return collapse_spaces_ascii(s);
+    return s;
 }
 
-static bool skill_appears_in_span_text(const llm::EvidenceSpan& ev, const llm::SkillHit& sh) {
-    // We accept a skill only if some reasonable token from raw/canonical appears in span_text.
-    // This kills "guessed" skills like product management when span is generic.
-    std::string span = normalize_skill_text_for_match(ev.span_text);
-
-    std::string raw = normalize_skill_text_for_match(sh.raw);
-    std::string canon = normalize_skill_text_for_match(sh.canonical);
-
-    auto good_match = [&](const std::string& s) -> bool {
-        if (s.empty()) return false;
-        // If it has multiple words, require at least one "long-ish" token to appear.
-        std::istringstream iss(s);
-        std::string tok;
-        while (iss >> tok) {
-            if (tok.size() < 4) continue; // ignore tiny tokens like "and", "of", "c"
-            if (span.find(tok) != std::string::npos) return true;
-        }
-        // fallback exact/substring for short items (like "sql", "aws", "c++")
-        if (s.size() <= 4) return span.find(s) != std::string::npos;
-        return false;
-    };
-
-    return good_match(raw) || good_match(canon);
+static bool role_mentions_cpp(const std::unordered_set<std::string>& q) {
+    return (q.find("c++") != q.end() || q.find("cpp") != q.end());
 }
 
-static bool is_generic_span(const std::string& span_text) {
-    // If the span has almost no concrete signal, drop it.
-    // (still allow if it contains explicit tech keywords)
-    std::string s = normalize_skill_text_for_match(span_text);
-
-    // allow-list: if span contains these, it's probably concrete enough
-    const char* allow[] = {
-        "c++","java","python","javascript","typescript","sql","aws","azure","gcp","docker","kubernetes","k8s",
-        "linux","git","rest","grpc","postgres","mysql","mongodb","redis","rails","react","node","spring","dotnet",
-        "terraform","ci","cd","jenkins","github","gitlab","unit test","testing"
-    };
-    for (const char* a : allow) {
-        if (s.find(a) != std::string::npos) return false;
-    }
-
-    // very generic phrases
-    const char* generic[] = {
-        "responsibility for ensuring",
-        "meet its requirements",
-        "work with stakeholders",
-        "excellent communication",
-        "fast paced environment",
-        "self starter",
-        "team player",
-        "problem solving skills"
-    };
-    for (const char* g : generic) {
-        if (s.find(g) != std::string::npos) return true;
-    }
-
-    // heuristic: too short and no digits/symbols tends to be fluff
-    if (s.size() < 55) return true;
-
-    return false;
-}
-
-static std::string norm_polarity(std::string p) {
-    p = to_lower_ascii(trim_ascii(p));
-    if (p.empty()) return "positive";
-    if (p == "negated" || p == "negative") return "negated";
-    if (p == "positive") return "positive";
-    return "positive";
-}
-
-static std::string norm_strength(std::string s) {
-    s = to_lower_ascii(trim_ascii(s));
-    if (s.empty()) return "unknown";
-    if (s == "must" || s == "should" || s == "nice" || s == "unknown") return s;
-    return "unknown";
+static bool post_has_cpp(const std::unordered_set<std::string>& toks) {
+    return (toks.find("c++") != toks.end() || toks.find("cpp") != toks.end());
 }
 
 // ---------------------------------------------------
@@ -441,7 +348,7 @@ static std::string norm_strength(std::string s) {
 int cmd_analyze(int argc, char** argv) {
     std::string role         = get_arg(argc, argv, "--role", "");
     std::string jobs_dir     = get_arg(argc, argv, "--jobs", "data/jobs/raw");
-    std::string topk_s       = get_arg(argc, argv, "--topk", "15"); // changed default to 15
+    std::string topk_s       = get_arg(argc, argv, "--topk", "15"); // default changed to 15
 
     // LLM args
     std::string llm_mock_dir = get_arg(argc, argv, "--llm_mock", "");
@@ -583,6 +490,11 @@ int cmd_analyze(int argc, char** argv) {
         return std::log((1.0 + (double)M) / (1.0 + (double)d));
     };
 
+    // query tokens and optional C++ gate
+    auto q_tokens = tokenize_query(role);
+    const bool wants_cpp = role_mentions_cpp(q_tokens);
+
+    // seed top tokens from seed hits (existing behavior)
     const size_t seedN = std::min(topn_seed, kept.size());
     std::unordered_map<std::string, int> tf_top;
     tf_top.reserve(1024);
@@ -598,8 +510,8 @@ int cmd_analyze(int argc, char** argv) {
     std::vector<TokScore> scored;
     scored.reserve(tf_top.size());
     for (const auto& kv : tf_top) {
-        double s = (double)kv.second * idf(kv.first);
-        if (s > 0.0) scored.push_back({kv.first, s});
+        double s2 = (double)kv.second * idf(kv.first);
+        if (s2 > 0.0) scored.push_back({kv.first, s2});
     }
 
     std::sort(scored.begin(), scored.end(),
@@ -611,11 +523,17 @@ int cmd_analyze(int argc, char** argv) {
     top_tokens.reserve(scored.size() * 2);
     for (const auto& ts : scored) top_tokens.insert(ts.tok);
 
+    // always include query tokens in the lex scoring set
+    for (const auto& qt : q_tokens) {
+        if (!qt.empty()) top_tokens.insert(qt);
+    }
+
     struct RankedHit {
         std::string job_id;
         double emb_score;
         double lex_score;
         double combined;
+        bool has_cpp = false;
     };
 
     std::vector<RankedHit> ranked;
@@ -625,18 +543,45 @@ int cmd_analyze(int argc, char** argv) {
         auto pt_it = post_tokens.find(h.job_id);
         if (pt_it == post_tokens.end()) continue;
 
+        const auto& toks = pt_it->second;
+
+        // base lex score: sum idf for selected tokens present
         double lex = 0.0;
-        for (const auto& tok : pt_it->second) {
+        for (const auto& tok : toks) {
             if (top_tokens.find(tok) != top_tokens.end()) lex += idf(tok);
         }
 
+        // strong boost for query token matches
+        double qboost = 0.0;
+        for (const auto& qt : q_tokens) {
+            if (toks.find(qt) != toks.end()) {
+                qboost += 3.0 * idf(qt);
+            }
+        }
+
+        const double lex_total = lex + qboost;
+
         double emb_s = (double)h.score;
-        double comb = alpha * emb_s + (1.0 - alpha) * lex;
-        ranked.push_back({h.job_id, emb_s, lex, comb});
+        double comb = alpha * emb_s + (1.0 - alpha) * lex_total;
+
+        RankedHit rh;
+        rh.job_id = h.job_id;
+        rh.emb_score = emb_s;
+        rh.lex_score = lex_total;
+        rh.combined = comb;
+        rh.has_cpp = post_has_cpp(toks);
+
+        ranked.push_back(std::move(rh));
     }
 
     std::sort(ranked.begin(), ranked.end(),
               [](const RankedHit& a, const RankedHit& b){ return a.combined > b.combined; });
+
+    // HARD preference: if role asks for C++, bring C++ postings to the front (if any exist)
+    if (wants_cpp) {
+        std::stable_partition(ranked.begin(), ranked.end(),
+                              [](const RankedHit& r){ return r.has_cpp; });
+    }
 
     if (ranked.size() > topk) ranked.resize(topk);
 
@@ -668,8 +613,6 @@ int cmd_analyze(int argc, char** argv) {
     std::unordered_map<std::string, std::unordered_map<std::string, Mention>> best_by_posting;
     best_by_posting.reserve(ranked.size());
 
-    constexpr double kMinLLMConfidence = 0.70;
-
     for (size_t i = 0; i < ranked.size(); ++i) {
         const auto& rh = ranked[i];
         auto it = by_id.find(rh.job_id);
@@ -678,13 +621,16 @@ int cmd_analyze(int argc, char** argv) {
         pr << "\n# hit " << rh.job_id
            << " combined=" << rh.combined
            << " emb=" << rh.emb_score
-           << " lex=" << rh.lex_score
-           << "\n";
+           << " lex=" << rh.lex_score;
+
+        if (wants_cpp) pr << " HAS_CPP=" << (rh.has_cpp ? "yes" : "no");
+        pr << "\n";
 
         const std::string& post_id = it->second->id;
         const std::string& text    = it->second->raw_text;
 
         if (!use_llm) {
+            // ------- Non-LLM path -------
             auto reqs = ex.extract(text);
             print_reqs(pr, post_id, reqs);
 
@@ -715,6 +661,7 @@ int cmd_analyze(int argc, char** argv) {
                 }
             }
         } else {
+            // ------- LLM path -------
             if (!do_profile) continue;
             if (!llm_client) continue;
 
@@ -722,22 +669,20 @@ int cmd_analyze(int argc, char** argv) {
             auto evidences = llm_client->analyze_posting(post_id, shrunk);
 
             for (const auto& ev0 : evidences) {
-                llm::EvidenceSpan ev = ev0;
+                std::string pol = ev0.polarity;
+                if (pol.empty()) pol = "positive";
+                if (pol == "negated") continue;
 
-                ev.polarity = norm_polarity(ev.polarity);
-                ev.strength = norm_strength(ev.strength);
-                ev.span_type = to_lower_ascii(trim_ascii(ev.span_type));
+                std::string st = ev0.strength;
+                if (st.empty()) st = "unknown";
 
-                if (ev.polarity == "negated") continue;
-                if (is_generic_span(ev.span_text)) continue;
+                std::string stype = ev0.span_type;
+                if (stype.empty()) stype = "other";
 
-                const double sw  = span_weight_from_span_type(ev.span_type);
-                const double stw = strength_weight(ev.strength);
+                const double sw  = span_weight_from_span_type(stype);
+                const double stw = strength_weight(st);
 
-                for (const auto& sh : ev.skills) {
-                    if (sh.confidence < kMinLLMConfidence) continue;
-                    if (!skill_appears_in_span_text(ev, sh)) continue;
-
+                for (const auto& sh : ev0.skills) {
                     std::string canon = canonicalize_skill(!sh.canonical.empty() ? sh.canonical : sh.raw);
                     if (canon.empty()) continue;
 
@@ -747,8 +692,8 @@ int cmd_analyze(int argc, char** argv) {
                     m.raw        = sh.raw;
                     m.canonical  = canon;
 
-                    m.strength   = ev.strength;
-                    m.polarity   = ev.polarity;
+                    m.strength   = st;
+                    m.polarity   = pol;
                     m.confidence = sh.confidence;
                     m.contrib    = sw * stw * m.confidence;
 
