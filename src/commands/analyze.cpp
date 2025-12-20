@@ -105,6 +105,26 @@ static std::string trim_ascii(const std::string& s) {
     return s.substr(i, j - i);
 }
 
+static bool is_space_ascii(char c) {
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
+
+static std::string collapse_spaces_ascii(const std::string& s) {
+    std::string out;
+    out.reserve(s.size());
+    bool in_ws = false;
+    for (char c : s) {
+        if (is_space_ascii(c)) {
+            if (!in_ws) out.push_back(' ');
+            in_ws = true;
+        } else {
+            out.push_back(c);
+            in_ws = false;
+        }
+    }
+    return trim_ascii(out);
+}
+
 static std::string canonicalize_skill(const std::string& raw) {
     std::string s = trim_ascii(raw);
     s = to_lower_ascii(s);
@@ -150,7 +170,7 @@ static std::string json_escape(const std::string& s) {
                 if ((unsigned char)c < 0x20) {
                     oss << "\\u";
                     const char* hex = "0123456789abcdef";
-                    oss << "00" << hex[(c >> 4) & 0xF] << hex[c & 0xF];
+                    oss << "00" << hex[((unsigned char)c >> 4) & 0xF] << hex[(unsigned char)c & 0xF];
                 } else oss << c;
         }
     }
@@ -261,9 +281,8 @@ static void write_profile_json(
     f << "}\n";
 }
 
-// --- NEW: shrink what you send to the LLM (big speed win) ---
+// --- shrink what you send to the LLM (big speed win) ---
 static std::string shrink_posting_for_llm(const std::string& raw) {
-    // Keep only relevant sections; if nothing found, truncate.
     std::string lower = to_lower_ascii(raw);
 
     struct Key { const char* k; };
@@ -293,7 +312,6 @@ static std::string shrink_posting_for_llm(const std::string& raw) {
     std::string out;
     out.reserve(9000);
 
-    // Grab up to 3 blocks starting at recognized headings
     size_t from = 0;
     int blocks = 0;
     while (blocks < 3) {
@@ -312,15 +330,110 @@ static std::string shrink_posting_for_llm(const std::string& raw) {
     }
 
     if (out.empty()) {
-        // fallback: just truncate raw (still better than huge blobs)
         size_t cap = std::min(raw.size(), (size_t)8000);
         out = raw.substr(0, cap);
     } else {
-        // cap final size
         if (out.size() > 9000) out.resize(9000);
     }
 
     return out;
+}
+
+// --- LLM output hardening ---
+
+static bool contains_substr_case_insensitive(const std::string& hay, const std::string& needle) {
+    if (needle.empty()) return true;
+    std::string h = to_lower_ascii(hay);
+    std::string n = to_lower_ascii(needle);
+    return h.find(n) != std::string::npos;
+}
+
+static std::string normalize_skill_text_for_match(std::string s) {
+    s = to_lower_ascii(s);
+    // turn separators into spaces, collapse whitespace
+    for (char& c : s) {
+        if (c == '-' || c == '_' || c == '/' || c == '(' || c == ')' || c == '[' || c == ']' ||
+            c == '{' || c == '}' || c == ',' || c == ';' || c == ':' || c == '.') {
+            c = ' ';
+        }
+    }
+    return collapse_spaces_ascii(s);
+}
+
+static bool skill_appears_in_span_text(const llm::EvidenceSpan& ev, const llm::SkillHit& sh) {
+    // We accept a skill only if some reasonable token from raw/canonical appears in span_text.
+    // This kills "guessed" skills like product management when span is generic.
+    std::string span = normalize_skill_text_for_match(ev.span_text);
+
+    std::string raw = normalize_skill_text_for_match(sh.raw);
+    std::string canon = normalize_skill_text_for_match(sh.canonical);
+
+    auto good_match = [&](const std::string& s) -> bool {
+        if (s.empty()) return false;
+        // If it has multiple words, require at least one "long-ish" token to appear.
+        std::istringstream iss(s);
+        std::string tok;
+        while (iss >> tok) {
+            if (tok.size() < 4) continue; // ignore tiny tokens like "and", "of", "c"
+            if (span.find(tok) != std::string::npos) return true;
+        }
+        // fallback exact/substring for short items (like "sql", "aws", "c++")
+        if (s.size() <= 4) return span.find(s) != std::string::npos;
+        return false;
+    };
+
+    return good_match(raw) || good_match(canon);
+}
+
+static bool is_generic_span(const std::string& span_text) {
+    // If the span has almost no concrete signal, drop it.
+    // (still allow if it contains explicit tech keywords)
+    std::string s = normalize_skill_text_for_match(span_text);
+
+    // allow-list: if span contains these, it's probably concrete enough
+    const char* allow[] = {
+        "c++","java","python","javascript","typescript","sql","aws","azure","gcp","docker","kubernetes","k8s",
+        "linux","git","rest","grpc","postgres","mysql","mongodb","redis","rails","react","node","spring","dotnet",
+        "terraform","ci","cd","jenkins","github","gitlab","unit test","testing"
+    };
+    for (const char* a : allow) {
+        if (s.find(a) != std::string::npos) return false;
+    }
+
+    // very generic phrases
+    const char* generic[] = {
+        "responsibility for ensuring",
+        "meet its requirements",
+        "work with stakeholders",
+        "excellent communication",
+        "fast paced environment",
+        "self starter",
+        "team player",
+        "problem solving skills"
+    };
+    for (const char* g : generic) {
+        if (s.find(g) != std::string::npos) return true;
+    }
+
+    // heuristic: too short and no digits/symbols tends to be fluff
+    if (s.size() < 55) return true;
+
+    return false;
+}
+
+static std::string norm_polarity(std::string p) {
+    p = to_lower_ascii(trim_ascii(p));
+    if (p.empty()) return "positive";
+    if (p == "negated" || p == "negative") return "negated";
+    if (p == "positive") return "positive";
+    return "positive";
+}
+
+static std::string norm_strength(std::string s) {
+    s = to_lower_ascii(trim_ascii(s));
+    if (s.empty()) return "unknown";
+    if (s == "must" || s == "should" || s == "nice" || s == "unknown") return s;
+    return "unknown";
 }
 
 // ---------------------------------------------------
@@ -328,7 +441,7 @@ static std::string shrink_posting_for_llm(const std::string& raw) {
 int cmd_analyze(int argc, char** argv) {
     std::string role         = get_arg(argc, argv, "--role", "");
     std::string jobs_dir     = get_arg(argc, argv, "--jobs", "data/jobs/raw");
-    std::string topk_s       = get_arg(argc, argv, "--topk", "25");
+    std::string topk_s       = get_arg(argc, argv, "--topk", "15"); // changed default to 15
 
     // LLM args
     std::string llm_mock_dir = get_arg(argc, argv, "--llm_mock", "");
@@ -555,6 +668,8 @@ int cmd_analyze(int argc, char** argv) {
     std::unordered_map<std::string, std::unordered_map<std::string, Mention>> best_by_posting;
     best_by_posting.reserve(ranked.size());
 
+    constexpr double kMinLLMConfidence = 0.70;
+
     for (size_t i = 0; i < ranked.size(); ++i) {
         const auto& rh = ranked[i];
         auto it = by_id.find(rh.job_id);
@@ -570,7 +685,6 @@ int cmd_analyze(int argc, char** argv) {
         const std::string& text    = it->second->raw_text;
 
         if (!use_llm) {
-            // ------- Non-LLM path -------
             auto reqs = ex.extract(text);
             print_reqs(pr, post_id, reqs);
 
@@ -601,20 +715,29 @@ int cmd_analyze(int argc, char** argv) {
                 }
             }
         } else {
-            // ------- LLM path (B): ONE CALL PER POSTING -------
             if (!do_profile) continue;
             if (!llm_client) continue;
 
             std::string shrunk = shrink_posting_for_llm(text);
             auto evidences = llm_client->analyze_posting(post_id, shrunk);
 
-            for (const auto& ev : evidences) {
+            for (const auto& ev0 : evidences) {
+                llm::EvidenceSpan ev = ev0;
+
+                ev.polarity = norm_polarity(ev.polarity);
+                ev.strength = norm_strength(ev.strength);
+                ev.span_type = to_lower_ascii(trim_ascii(ev.span_type));
+
                 if (ev.polarity == "negated") continue;
+                if (is_generic_span(ev.span_text)) continue;
 
                 const double sw  = span_weight_from_span_type(ev.span_type);
                 const double stw = strength_weight(ev.strength);
 
                 for (const auto& sh : ev.skills) {
+                    if (sh.confidence < kMinLLMConfidence) continue;
+                    if (!skill_appears_in_span_text(ev, sh)) continue;
+
                     std::string canon = canonicalize_skill(!sh.canonical.empty() ? sh.canonical : sh.raw);
                     if (canon.empty()) continue;
 
@@ -624,8 +747,8 @@ int cmd_analyze(int argc, char** argv) {
                     m.raw        = sh.raw;
                     m.canonical  = canon;
 
-                    m.strength   = ev.strength.empty() ? "unknown" : ev.strength;
-                    m.polarity   = ev.polarity.empty() ? "positive" : ev.polarity;
+                    m.strength   = ev.strength;
+                    m.polarity   = ev.polarity;
                     m.confidence = sh.confidence;
                     m.contrib    = sw * stw * m.confidence;
 
