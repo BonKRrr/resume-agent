@@ -1,0 +1,240 @@
+{
+  "profile_path": "out_test/profile.json",
+  "resume_path": "data/test_resume.json",
+  "role": "C++ Backend Developer",
+  "score_config": {
+    "core_bonus": 0.15,
+    "semantic_enabled": true,
+    "semantic_threshold": 0.66
+  },
+  "selected_bullets": [
+    {
+      "bullet_id": "b_tech_1_cpp_perf",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.44,
+          "matched_skill": "c++",
+          "profile_weight": 0.44,
+          "similarity": 1.0,
+          "source": "c++",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.346667,
+          "matched_skill": "performance",
+          "profile_weight": 0.346667,
+          "similarity": 1.0,
+          "source": "performance",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "c++",
+          "weight": 0.44
+        },
+        {
+          "skill": "performance",
+          "weight": 0.346667
+        }
+      ],
+      "parent_id": "exp_tech_1",
+      "parent_title": "EXP_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.32115545791433575,
+        "raw_skill_sum": 0.786667,
+        "tag_count": 5,
+        "total": 0.32115545791433575
+      },
+      "section": "Experience",
+      "tags": [
+        "c++",
+        "performance",
+        "profiling",
+        "memory",
+        "latency"
+      ],
+      "text": "Optimized a C++ service by reducing memory allocations and improving cache locality; cut latency by 25%."
+    },
+    {
+      "bullet_id": "b_proj_tech_1_java",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.393333,
+          "matched_skill": "java",
+          "profile_weight": 0.393333,
+          "similarity": 1.0,
+          "source": "java",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.166667,
+          "matched_skill": "backend",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "backend",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.04177793717759848,
+          "matched_skill": "software design technique",
+          "profile_weight": 0.193667,
+          "similarity": 0.8628818988800049,
+          "source": "software design",
+          "type": "semantic"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "java",
+          "weight": 0.393333
+        },
+        {
+          "skill": "backend",
+          "weight": 0.166667
+        },
+        {
+          "skill": "software design technique",
+          "weight": 0.04177793717759848
+        }
+      ],
+      "parent_id": "proj_tech_1",
+      "parent_title": "PROJ_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.2456748140916246,
+        "raw_skill_sum": 0.6017779371775985,
+        "tag_count": 5,
+        "total": 0.2456748140916246
+      },
+      "section": "Project",
+      "tags": [
+        "java",
+        "backend",
+        "software design",
+        "logging",
+        "validation"
+      ],
+      "text": "Built a Java backend service with layered architecture; added structured logging and input validation."
+    },
+    {
+      "bullet_id": "b_ath_2_team",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.166667,
+          "matched_skill": "teamwork",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "teamwork",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.154667,
+          "matched_skill": "communication",
+          "profile_weight": 0.154667,
+          "similarity": 1.0,
+          "source": "communication",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "teamwork",
+          "weight": 0.166667
+        },
+        {
+          "skill": "communication",
+          "weight": 0.154667
+        }
+      ],
+      "parent_id": "exp_athletics_1",
+      "parent_title": "EXP_ATHLETICS_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.14370493349638347,
+        "raw_skill_sum": 0.321334,
+        "tag_count": 4,
+        "total": 0.14370493349638347
+      },
+      "section": "Experience",
+      "tags": [
+        "teamwork",
+        "communication",
+        "strategy",
+        "coachability"
+      ],
+      "text": "Collaborated with teammates and coaches to refine strategy and improve competitive performance."
+    },
+    {
+      "bullet_id": "b_proj_tech_2_db",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.346667,
+          "matched_skill": "sql",
+          "profile_weight": 0.346667,
+          "similarity": 1.0,
+          "source": "sql",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "sql",
+          "weight": 0.346667
+        }
+      ],
+      "parent_id": "proj_tech_1",
+      "parent_title": "PROJ_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.141526210110236,
+        "raw_skill_sum": 0.346667,
+        "tag_count": 5,
+        "total": 0.141526210110236
+      },
+      "section": "Project",
+      "tags": [
+        "sql",
+        "database",
+        "data modeling",
+        "queries",
+        "analytics"
+      ],
+      "text": "Designed a small database schema and wrote queries to support analytics features."
+    }
+  ],
+  "selection_decisions": [
+    {
+      "accepted": true,
+      "bullet_id": "b_tech_1_cpp_perf",
+      "reason": "selected"
+    },
+    {
+      "accepted": true,
+      "bullet_id": "b_proj_tech_1_java",
+      "reason": "selected"
+    },
+    {
+      "accepted": true,
+      "bullet_id": "b_ath_2_team",
+      "reason": "selected"
+    },
+    {
+      "accepted": true,
+      "bullet_id": "b_proj_tech_2_db",
+      "reason": "selected"
+    }
+  ],
+  "selector_config": {
+    "max_bullets_per_parent": 3,
+    "max_experience_bullets": 6,
+    "max_project_bullets": 4,
+    "max_total_bullets": 4,
+    "min_unique_parents": 2
+  }
+}

@@ -74,6 +74,7 @@ static std::string normalize_key(const std::string& s) {
     return to_lower_copy(trim_copy(s));
 }
 
+// Manual parsing: matches your structs (no ADL / no hidden converters).
 static Bullet parse_bullet(const nlohmann::json& j) {
     Bullet b;
     b.id = j.value("id", "");
@@ -152,6 +153,7 @@ int cmd_build(int argc, char** argv) {
 
         const bool scores_only = has_flag(argc, argv, "--scores_only");
 
+        // semantic matching flags
         const bool semantic = has_flag(argc, argv, "--semantic");
         const std::string emb_model = get_arg(argc, argv, "--emb_model", "models/emb/model.onnx");
         const std::string emb_vocab = get_arg(argc, argv, "--emb_vocab", "models/emb/vocab.txt");
@@ -159,6 +161,7 @@ int cmd_build(int argc, char** argv) {
         const int semantic_topk_i = get_arg_int(argc, argv, "--semantic_topk", 1);
         const std::string semantic_cache = get_arg(argc, argv, "--semantic_cache", "");
 
+        // selection constraints (all have defaults in SelectorConfig)
         resume::SelectorConfig sel_cfg;
         sel_cfg.max_total_bullets = get_arg_int(argc, argv, "--max_total_bullets", sel_cfg.max_total_bullets);
         sel_cfg.max_bullets_per_parent = get_arg_int(argc, argv, "--max_bullets_per_parent", sel_cfg.max_bullets_per_parent);
@@ -166,6 +169,7 @@ int cmd_build(int argc, char** argv) {
         sel_cfg.max_project_bullets = get_arg_int(argc, argv, "--max_project_bullets", sel_cfg.max_project_bullets);
         sel_cfg.min_unique_parents = get_arg_int(argc, argv, "--min_unique_parents", sel_cfg.min_unique_parents);
 
+        // parse inputs
         const nlohmann::json resume_j = read_json_file(resume_path);
         const nlohmann::json profile_j = read_json_file(profile_path);
 
@@ -174,10 +178,12 @@ int cmd_build(int argc, char** argv) {
 
         const std::string effective_role = !role_arg.empty() ? role_arg : profile.role;
 
+        // scoring config
         resume::ScoreConfig score_cfg;
         score_cfg.semantic_enabled = semantic;
         score_cfg.semantic_threshold = semantic_threshold;
 
+        // semantic matcher (optional)
         std::unique_ptr<resume::SemanticMatcher> matcher;
         MiniLmEmbedder embedder;
 
@@ -197,27 +203,31 @@ int cmd_build(int argc, char** argv) {
             matcher = resume::build_profile_semantic_matcher(profile.skill_weights, embedder, mcfg);
         }
 
+        // score bullets
         const auto scored = resume::score_bullets(resume, profile, score_cfg, matcher.get());
 
+        // count bullets in source resume
         int bullet_count = 0;
         for (const auto& e : resume.experiences) bullet_count += static_cast<int>(e.bullets.size());
         for (const auto& p : resume.projects) bullet_count += static_cast<int>(p.bullets.size());
 
-        resume::BulletScoresArtifact artifact;
-        artifact.role = effective_role;
-        artifact.num_bullets = bullet_count;
-        artifact.resume_path = resume_path.string();
-        artifact.profile_path = profile_path.string();
-        artifact.bullets = scored;
+        // always write bullet_scores.json (useful debugging artifact)
+        resume::BulletScoresArtifact scores_art;
+        scores_art.role = effective_role;
+        scores_art.num_bullets = bullet_count;
+        scores_art.resume_path = resume_path.string();
+        scores_art.profile_path = profile_path.string();
+        scores_art.bullets = scored;
 
+        fs::create_directories(outdir);
         const fs::path scores_path = outdir / "bullet_scores.json";
-        artifact.write_to(scores_path);
+        scores_art.write_to(scores_path);
 
         std::cout << "ROLE: " << effective_role << "\n";
         std::cout << "RESUME: " << resume_path.string() << "\n";
         std::cout << "PROFILE: " << profile_path.string() << "\n";
         std::cout << "OUT_SCORES: " << scores_path.string() << "\n";
-        std::cout << "BULLETS: " << artifact.num_bullets << "\n";
+        std::cout << "BULLETS: " << scores_art.num_bullets << "\n";
         std::cout << "SEMANTIC: " << (semantic ? "on" : "off") << "\n";
 
         if (semantic) {
@@ -228,18 +238,19 @@ int cmd_build(int argc, char** argv) {
             if (!semantic_cache.empty()) std::cout << "SEM_CACHE: " << semantic_cache << "\n";
         }
 
-        if (scores_only) {
-            return 0;
-        }
+        if (scores_only) return 0;
 
+        // select bullets under constraints
         const resume::SelectorResult sel = resume::select_bullets(scored, sel_cfg);
 
+        // build concrete resume + markdown
         const resume::ConcreteResume cr = resume::build_concrete_resume(resume, sel.selected);
         const std::string md = resume::render_markdown(cr);
 
         const fs::path resume_md_path = outdir / "resume.md";
         resume::write_markdown(resume_md_path, md);
 
+        // write explainability.json
         resume::ExplainabilityArtifact ex;
         ex.role = effective_role;
         ex.resume_path = resume_path.string();
