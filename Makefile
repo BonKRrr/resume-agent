@@ -14,7 +14,9 @@ CMD_SRC := \
 	src\commands\resumeDump.cpp \
 	src\commands\analyze.cpp \
 	src\commands\embed.cpp \
-	src\commands\build.cpp
+	src\commands\build.cpp \
+	src\commands\run.cpp \
+	src\commands\validate.cpp
 
 RESUME_SRC := \
 	src\resume\Scorer.cpp \
@@ -22,7 +24,8 @@ RESUME_SRC := \
 	src\resume\SemanticMatcher.cpp \
 	src\resume\Selector.cpp \
 	src\resume\MarkdownRenderer.cpp \
-	src\resume\ExplainabilityArtifact.cpp
+	src\resume\ExplainabilityArtifact.cpp \
+	src\resume\Validator.cpp
 
 EMB_SRC := \
 	src\emb\WordPieceTokenizer.cpp \

@@ -1,7 +1,11 @@
+// app/main.cpp
+
 #include "commands/ResumeDump.hpp"
 #include "commands/analyze.hpp"
 #include "commands/embed.hpp"
 #include "commands/build.hpp"
+#include "commands/run.hpp"
+#include "commands/validate.hpp"
 
 #include <iostream>
 #include <string>
@@ -9,12 +13,49 @@
 static int print_usage() {
     std::cerr
         << "usage:\n"
+        << "  resume-agent run --role \"<job title>\" --resume <path> [--outdir <dir>]\n"
+        << "  resume-agent validate --resume <path> [--outdir <dir>] [--explain <path>] [--out <path>]\n"
         << "  resume-agent resume dump [path]\n"
         << "  resume-agent analyze [args]\n"
         << "  resume-agent embed [args]\n"
         << "  resume-agent build [args]\n"
         << "  resume-agent help\n";
     return 1;
+}
+
+static int print_run_help() {
+    std::cerr
+        << "usage:\n"
+        << "  resume-agent run --role \"<job title>\" --resume <path> [--outdir <dir>]\n"
+        << "\n"
+        << "required:\n"
+        << "  --role <str>                 (required)\n"
+        << "  --resume <path>              (required)\n"
+        << "\n"
+        << "optional:\n"
+        << "  --outdir <dir>               default: out\n"
+        << "\n"
+        << "notes:\n"
+        << "  This runs:\n"
+        << "    analyze --profile --llm\n"
+        << "    build --semantic\n"
+        << "    validate\n";
+    return 0;
+}
+
+static int print_validate_help() {
+    std::cerr
+        << "usage:\n"
+        << "  resume-agent validate --resume <path> [options]\n"
+        << "\n"
+        << "required:\n"
+        << "  --resume <path>              (required)\n"
+        << "\n"
+        << "options:\n"
+        << "  --outdir <dir>               default: out\n"
+        << "  --explain <path>             default: <outdir>/explainability.json\n"
+        << "  --out <path>                 default: <outdir>/validation_report.json\n";
+    return 0;
 }
 
 static int print_analyze_help() {
@@ -93,21 +134,23 @@ int main(int argc, char** argv) {
         return print_usage();
     }
 
-    // legacy: resume dump
     if (argc >= 3) {
         const std::string sub1 = argv[2];
         const std::string path = (argc >= 4) ? argv[3] : "data/abstract_resume.json";
         if (cmd == "resume" && sub1 == "dump") return resumeDump(path);
     }
 
-    // subcommand help
-    if (cmd == "analyze" && (argc >= 3 && std::string(argv[2]) == "--help")) return print_analyze_help();
-    if (cmd == "embed"   && (argc >= 3 && std::string(argv[2]) == "--help")) return print_embed_help();
-    if (cmd == "build"   && (argc >= 3 && std::string(argv[2]) == "--help")) return print_build_help();
+    if (cmd == "run"      && (argc >= 3 && std::string(argv[2]) == "--help")) return print_run_help();
+    if (cmd == "validate" && (argc >= 3 && std::string(argv[2]) == "--help")) return print_validate_help();
+    if (cmd == "analyze"  && (argc >= 3 && std::string(argv[2]) == "--help")) return print_analyze_help();
+    if (cmd == "embed"    && (argc >= 3 && std::string(argv[2]) == "--help")) return print_embed_help();
+    if (cmd == "build"    && (argc >= 3 && std::string(argv[2]) == "--help")) return print_build_help();
 
-    if (cmd == "analyze") return cmd_analyze(argc - 1, argv + 1);
-    if (cmd == "embed")   return cmd_embed(argc - 1, argv + 1);
-    if (cmd == "build")   return cmd_build(argc - 1, argv + 1);
+    if (cmd == "run")      return cmd_run(argc - 1, argv + 1);
+    if (cmd == "validate") return cmd_validate(argc - 1, argv + 1);
+    if (cmd == "analyze")  return cmd_analyze(argc - 1, argv + 1);
+    if (cmd == "embed")    return cmd_embed(argc - 1, argv + 1);
+    if (cmd == "build")    return cmd_build(argc - 1, argv + 1);
 
     std::cerr << "unknown command\n";
     return print_usage();
