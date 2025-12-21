@@ -1,0 +1,175 @@
+{"posting_id":"test","category":"","raw":"C++","canonical":"c++","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"test","category":"","raw":"algorithms","canonical":"algorithms","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"005","category":"","raw":"C++","canonical":"c++","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"005","category":"","raw":"performance","canonical":"performance","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"005","category":"","raw":"Developer","canonical":"developer","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"005","category":"","raw":"optimization","canonical":"optimization","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"005","category":"","raw":"large scale","canonical":"large-scale","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"Linux","canonical":"linux","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"Ubuntu","canonical":"ubuntu","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"backend","canonical":"backend","strength":"must","polarity":"unknown","confidence":1,"contrib":0.4}
+{"posting_id":"file_16","category":"","raw":"EBS","canonical":"ebs","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"OpsWorks","canonical":"opsworks","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"EC2","canonical":"ec2","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"VPC","canonical":"vpc","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"RDS","canonical":"rds","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"S3","canonical":"s3","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"frontend","canonical":"frontend","strength":"must","polarity":"unknown","confidence":1,"contrib":0.4}
+{"posting_id":"file_16","category":"","raw":"CloudWatch","canonical":"cloudwatch","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"Chef","canonical":"chef","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"Ruby","canonical":"ruby","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"English","canonical":"english","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_16","category":"","raw":"open source","canonical":"open-source","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_16","category":"","raw":"AWS","canonical":"aws","strength":"must","polarity":"unknown","confidence":1,"contrib":0.4}
+{"posting_id":"file_16","category":"","raw":"project management","canonical":"project-management","strength":"must","polarity":"unknown","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_16","category":"","raw":"hackdays","canonical":"hackdays","strength":"nice","polarity":"unknown","confidence":0.8,"contrib":0.128}
+{"posting_id":"004","category":"","raw":"C++ programming language","canonical":"c++","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"004","category":"","raw":"communication","canonical":"communication","strength":"must","polarity":"positive","confidence":0.9,"contrib":0.36}
+{"posting_id":"004","category":"","raw":"UI tech stack","canonical":"ui-tech-stack","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"004","category":"","raw":"code maintenance","canonical":"code-maintenance","strength":"must","polarity":"positive","confidence":0.7,"contrib":0.28}
+{"posting_id":"004","category":"","raw":"team collaboration","canonical":"team-collaboration","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_15","category":"","raw":"Ruby on Rails development","canonical":"ruby on rails","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_15","category":"","raw":"server-side framework","canonical":"server side framework","strength":"should","polarity":"positive","confidence":0.8,"contrib":0.56}
+{"posting_id":"file_15","category":"","raw":"code quality","canonical":"code quality","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_15","category":"","raw":"innovative solutions","canonical":"innovative solution","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_15","category":"","raw":"refactoring","canonical":"refactoring","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_15","category":"","raw":"technical debt","canonical":"technical debt","strength":"must","polarity":"positive","confidence":0.9,"contrib":0.36}
+{"posting_id":"file_15","category":"","raw":"client-side framework","canonical":"client side framework","strength":"should","polarity":"positive","confidence":0.7,"contrib":0.49}
+{"posting_id":"file_15","category":"","raw":"code review","canonical":"code review","strength":"must","polarity":"positive","confidence":0.9,"contrib":0.36}
+{"posting_id":"file_15","category":"","raw":"software development","canonical":"software development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_15","category":"","raw":"software design technique","canonical":"software design technique","strength":"should","polarity":"positive","confidence":0.7,"contrib":0.49}
+{"posting_id":"file_15","category":"","raw":"node.js","canonical":"node js","strength":"should","polarity":"positive","confidence":0.7,"contrib":0.49}
+{"posting_id":"file_15","category":"","raw":"AngularJS","canonical":"angular js","strength":"should","polarity":"positive","confidence":0.6,"contrib":0.42}
+{"posting_id":"file_15","category":"","raw":"scalable architecture","canonical":"scalable architecture","strength":"should","polarity":"positive","confidence":0.8,"contrib":0.56}
+{"posting_id":"file_20","category":"","raw":"Ruby on Rails development","canonical":"ruby-on-rails","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_20","category":"","raw":"open source contribution","canonical":"open-source-contribution","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_20","category":"","raw":"Web technologies (HTML, CSS, Javascript)","canonical":"web-technologies","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_20","category":"","raw":"software design techniques","canonical":"software-design-techniques","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_20","category":"","raw":"backend services","canonical":"backend-services","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_20","category":"","raw":"distributed architectures and services","canonical":"distributed-architectures-and-services","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_20","category":"","raw":"code reviews","canonical":"code-reviews","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_20","category":"","raw":"software development","canonical":"software-development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"agile development","canonical":"agile development","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"teamwork","canonical":"teamwork","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"frontend development","canonical":"frontend development","strength":"should","polarity":"positive","confidence":1,"contrib":0.28}
+{"posting_id":"file_14","category":"","raw":"new technologies","canonical":"new technologies","strength":"should","polarity":"positive","confidence":1,"contrib":0.28}
+{"posting_id":"file_14","category":"","raw":"analysis","canonical":"analysis","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"testing","canonical":"testing","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"javascript","canonical":"javascript","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"tool development","canonical":"tool development","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"stakeholder management","canonical":"stakeholder management","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"collaboration","canonical":"collaboration","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"product development","canonical":"product development","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_14","category":"","raw":"software development","canonical":"software development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"programming","canonical":"programming","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"git","canonical":"git","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"html","canonical":"html","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"css","canonical":"css","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_14","category":"","raw":"open source","canonical":"open source","strength":"should","polarity":"positive","confidence":0.8,"contrib":0.112}
+{"posting_id":"file_14","category":"","raw":"scalability","canonical":"scalability","strength":"should","polarity":"positive","confidence":1,"contrib":0.14}
+{"posting_id":"file_14","category":"","raw":"distributed systems","canonical":"distributed systems","strength":"should","polarity":"positive","confidence":1,"contrib":0.14}
+{"posting_id":"file_31","category":"","raw":"software engineer","canonical":"software engineer","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_31","category":"","raw":"php","canonical":"php","strength":"must","polarity":"positive","confidence":0.9,"contrib":0.36}
+{"posting_id":"file_31","category":"","raw":"python","canonical":"python","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_31","category":"","raw":"javascript","canonical":"javascript","strength":"must","polarity":"positive","confidence":0.7,"contrib":0.28}
+{"posting_id":"file_31","category":"","raw":"rds","canonical":"rds","strength":"must","polarity":"positive","confidence":0.6,"contrib":0.24}
+{"posting_id":"file_44","category":"","raw":"iOS SDK","canonical":"ios-sdk","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"Cocoa","canonical":"cocoa","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"Objective-C","canonical":"objective-c","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"interaction","canonical":"interaction-design","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.8}
+{"posting_id":"file_44","category":"","raw":"development-cycles","canonical":"development-cycles","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_44","category":"","raw":"Xcode","canonical":"xcode","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"user-interface","canonical":"user-interface-design","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_44","category":"","raw":"developer","canonical":"developer","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"self-starter","canonical":"self-starter","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"server-side-integration","canonical":"server-side-integration","strength":"must","polarity":"positive","confidence":0.6,"contrib":0.24}
+{"posting_id":"file_44","category":"","raw":"attention-to-detail","canonical":"attention-to-detail","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_44","category":"","raw":"iOS application","canonical":"ios-application","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_44","category":"","raw":"a-b-testing","canonical":"ab-testing","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_44","category":"","raw":"feature-development","canonical":"feature-development","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.32}
+{"posting_id":"file_19","category":"","raw":"JavaScript","canonical":"javascript","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Browser support","canonical":"browser-support","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_19","category":"","raw":"JavaScript design patterns","canonical":"javascript-design-patterns","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Ruby on Rails","canonical":"ruby-on-rails","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Feature development","canonical":"feature-development","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_19","category":"","raw":"Frontend development","canonical":"frontend-development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Code review","canonical":"code-review","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_19","category":"","raw":"Frontend performance optimization","canonical":"frontend-performance-optimization","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Cross-device development","canonical":"cross-device-development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"User experience design","canonical":"user-experience-design","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_19","category":"","raw":"Backend development","canonical":"backend-development","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_19","category":"","raw":"Mobile development","canonical":"mobile-development","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_19","category":"","raw":"User interface design","canonical":"user-interface-design","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Web development","canonical":"web-development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"High-traffic application maintenance","canonical":"high-traffic-application-maintenance","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"API design","canonical":"api-design","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"REST API development","canonical":"rest-api-development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Web standards","canonical":"web-standards","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Unit testing","canonical":"unit-testing","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Frontend application testing","canonical":"frontend-application-testing","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_19","category":"","raw":"Software development","canonical":"software-development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_24","category":"","raw":"ad-related technologies","canonical":"ad-related technologies","strength":"should","polarity":"positive","confidence":0.5,"contrib":0.14}
+{"posting_id":"file_24","category":"","raw":"digital media start-ups","canonical":"digital media start-ups","strength":"should","polarity":"positive","confidence":0.5,"contrib":0.14}
+{"posting_id":"file_24","category":"","raw":"ad servers","canonical":"ad servers","strength":"should","polarity":"positive","confidence":0.5,"contrib":0.14}
+{"posting_id":"file_24","category":"","raw":"early-stage companies","canonical":"early-stage companies","strength":"should","polarity":"positive","confidence":0.5,"contrib":0.14}
+{"posting_id":"file_24","category":"","raw":"Linux","canonical":"linux","strength":"should","polarity":"positive","confidence":1,"contrib":0.28}
+{"posting_id":"file_24","category":"","raw":"Apache","canonical":"apache","strength":"should","polarity":"positive","confidence":1,"contrib":0.28}
+{"posting_id":"file_24","category":"","raw":"Javascript","canonical":"javascript","strength":"should","polarity":"positive","confidence":1,"contrib":0.28}
+{"posting_id":"file_24","category":"","raw":"PHP","canonical":"php","strength":"should","polarity":"positive","confidence":1,"contrib":0.28}
+{"posting_id":"file_24","category":"","raw":"WordPress.com VIP developer","canonical":"wordpress.com vip developer","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_33","category":"","raw":"service APIs","canonical":"service apis","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"Cassandra","canonical":"cassandra","strength":"should","polarity":"positive","confidence":0.7,"contrib":0.098}
+{"posting_id":"file_33","category":"","raw":"Java","canonical":"java","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"C","canonical":"c","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"database schema design","canonical":"database schema design","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"tuning","canonical":"tuning","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"designing","canonical":"designing","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"design patterns","canonical":"design patterns","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"concurrency","canonical":"concurrency","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"multithreading","canonical":"multithreading","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_33","category":"","raw":"Kafka","canonical":"kafka","strength":"should","polarity":"positive","confidence":0.9,"contrib":0.126}
+{"posting_id":"file_33","category":"","raw":"Java NIO","canonical":"java nio","strength":"should","polarity":"positive","confidence":0.8,"contrib":0.112}
+{"posting_id":"file_09","category":"","raw":"iOS","canonical":"ios development","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_09","category":"","raw":"frameworks","canonical":"software frameworks","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.8}
+{"posting_id":"file_09","category":"","raw":"Object Oriented concepts","canonical":"object-oriented programming","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_09","category":"","raw":"background services","canonical":"system services","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.8}
+{"posting_id":"file_09","category":"","raw":"design trends","canonical":"user experience design","strength":"must","polarity":"positive","confidence":0.7,"contrib":0.7}
+{"posting_id":"file_09","category":"","raw":"RESTful API","canonical":"api design","strength":"should","polarity":"positive","confidence":0.9,"contrib":0.63}
+{"posting_id":"file_09","category":"","raw":"API client library","canonical":"software development libraries","strength":"should","polarity":"positive","confidence":0.8,"contrib":0.56}
+{"posting_id":"file_09","category":"","raw":"geolocation services","canonical":"location-based services","strength":"must","polarity":"positive","confidence":0.9,"contrib":0.9}
+{"posting_id":"file_09","category":"","raw":"app development","canonical":"mobile application development","strength":"must","polarity":"positive","confidence":0.9,"contrib":0.9}
+{"posting_id":"file_09","category":"","raw":"Apple Approval & Distribution Process","canonical":"app distribution","strength":"must","polarity":"positive","confidence":0.8,"contrib":0.8}
+{"posting_id":"file_09","category":"","raw":"Ad Hoc & Enterprise Distribution","canonical":"mobile app deployment","strength":"must","polarity":"positive","confidence":0.7,"contrib":0.7}
+{"posting_id":"file_09","category":"","raw":"WebRTC","canonical":"real-time communication protocol","strength":"nice","polarity":"positive","confidence":0.8,"contrib":0.064}
+{"posting_id":"file_09","category":"","raw":"data channels","canonical":"communication protocols","strength":"nice","polarity":"positive","confidence":0.7,"contrib":0.056}
+{"posting_id":"file_34","category":"","raw":"object oriented language","canonical":"object_oriented_language","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_34","category":"","raw":"Network Engineering","canonical":"network_engineering","strength":"should","polarity":"positive","confidence":0.8,"contrib":0.56}
+{"posting_id":"file_34","category":"","raw":"application support","canonical":"application_support","strength":"must","polarity":"positive","confidence":0.4,"contrib":0.16}
+{"posting_id":"file_34","category":"","raw":"project lifecycle","canonical":"project_lifecycle","strength":"must","polarity":"positive","confidence":0.6,"contrib":0.24}
+{"posting_id":"file_34","category":"","raw":"Systems Engineering","canonical":"systems_engineering","strength":"should","polarity":"positive","confidence":0.9,"contrib":0.63}
+{"posting_id":"file_34","category":"","raw":"system support","canonical":"system_support","strength":"must","polarity":"positive","confidence":0.5,"contrib":0.2}
+{"posting_id":"file_34","category":"","raw":"information security risk management","canonical":"information_security_risk_management","strength":"should","polarity":"positive","confidence":0.7,"contrib":0.49}
+{"posting_id":"file_34","category":"","raw":"issue triage","canonical":"issue_triage","strength":"must","polarity":"positive","confidence":0.3,"contrib":0.12}
+{"posting_id":"file_34","category":"","raw":"signal separation","canonical":"signal_separation","strength":"must","polarity":"positive","confidence":0.2,"contrib":0.08}
+{"posting_id":"file_02","category":"","raw":"software design","canonical":"software-design","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"Java/J2EE technology","canonical":"java","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"application maintenance","canonical":"application-maintenance","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_02","category":"","raw":"application support","canonical":"application-support","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_02","category":"","raw":"XML/JSON","canonical":"xml-json","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"SQL","canonical":"sql","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"XML","canonical":"xml","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"programming skills","canonical":"programming-skills","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"team collaboration","canonical":"team-collaboration","strength":"must","polarity":"positive","confidence":1,"contrib":0.4}
+{"posting_id":"file_02","category":"","raw":"Single-SignOn","canonical":"single-signon","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"computer science","canonical":"computer-science","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"highly available","canonical":"highly-available","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"distributed systems","canonical":"distributed-systems","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"scalable applications","canonical":"scalable-applications","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"J2EE","canonical":"j2ee","strength":"must","polarity":"positive","confidence":1,"contrib":1}
+{"posting_id":"file_02","category":"","raw":"JBoss","canonical":"jboss","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_02","category":"","raw":"Apache","canonical":"apache","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_02","category":"","raw":"Tomcat","canonical":"tomcat","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_02","category":"","raw":"SVN","canonical":"svn","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_02","category":"","raw":"CVS","canonical":"cvs","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_02","category":"","raw":"relational databases","canonical":"relational-databases","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}
+{"posting_id":"file_02","category":"","raw":"no-SQL databases","canonical":"no-sql-databases","strength":"should","polarity":"positive","confidence":1,"contrib":0.7}

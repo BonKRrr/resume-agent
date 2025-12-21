@@ -1,34 +1,228 @@
 {
   "experiences": [
     {
-      "id": "exp_1",
-      "title": "Software Developer Intern",
-      "organization": "Company X",
-      "dates": "2024",
+      "id": "exp_tech_1",
+      "title": "EXP_TECH_1",
+      "organization": "Org_TechLab",
+      "dates": "2023-01 to 2023-08",
       "bullets": [
         {
-          "id": "b1",
-          "text": "Developed multithreaded C++ services for backend processing.",
-          "tags": ["C++", "backend", "multithreading"]
+          "id": "b_tech_1_cpp_perf",
+          "text": "Optimized a C++ service by reducing memory allocations and improving cache locality; cut latency by 25%.",
+          "tags": ["c++", "performance", "profiling", "memory", "latency"]
         },
         {
-          "id": "b2",
-          "text": "Wrote unit tests and improved system reliability.",
-          "tags": ["testing", "C++"]
+          "id": "b_tech_2_linux_debug",
+          "text": "Debugged production issues on Linux using logs, core dumps, and gdb; wrote a runbook for incident response.",
+          "tags": ["linux", "debugging", "gdb", "incident response", "observability"]
+        },
+        {
+          "id": "b_tech_3_api_backend",
+          "text": "Built REST APIs with authentication and rate limiting; designed clean request/response schemas.",
+          "tags": ["rest api", "backend", "authentication", "http", "json"]
+        },
+        {
+          "id": "b_tech_4_testing_ci",
+          "text": "Added unit/integration tests and CI checks to prevent regressions; improved test coverage on critical modules.",
+          "tags": ["testing", "unit tests", "ci/cd", "quality", "regression testing"]
+        }
+      ]
+    },
+    {
+      "id": "exp_data_1",
+      "title": "EXP_DATA_1",
+      "organization": "Org_DataGroup",
+      "dates": "2022-09 to 2023-04",
+      "bullets": [
+        {
+          "id": "b_data_1_pipeline",
+          "text": "Built data pipelines to clean, validate, and transform messy datasets for analysis and reporting.",
+          "tags": ["data pipelines", "etl", "data cleaning", "python", "data validation"]
+        },
+        {
+          "id": "b_data_2_stats",
+          "text": "Performed statistical analysis using regression and hypothesis testing; communicated results with clear visuals.",
+          "tags": ["statistics", "regression", "hypothesis testing", "data visualization", "communication"]
+        },
+        {
+          "id": "b_data_3_ml",
+          "text": "Trained and evaluated machine learning models; compared baselines and documented tradeoffs.",
+          "tags": ["machine learning", "model evaluation", "experimentation", "documentation", "tradeoffs"]
+        }
+      ]
+    },
+    {
+      "id": "exp_ops_1",
+      "title": "EXP_OPS_1",
+      "organization": "Org_Startup",
+      "dates": "2023-05 to 2023-08",
+      "bullets": [
+        {
+          "id": "b_ops_1_kpi",
+          "text": "Defined KPIs for acquisition and retention; built weekly dashboards to track trends and anomalies.",
+          "tags": ["kpis", "business analytics", "dashboards", "metrics", "decision making"]
+        },
+        {
+          "id": "b_ops_2_process",
+          "text": "Designed operational workflows to improve scheduling and resource allocation across teams.",
+          "tags": ["operations", "process optimization", "planning", "coordination", "logistics"]
+        },
+        {
+          "id": "b_ops_3_stakeholders",
+          "text": "Ran stakeholder check-ins to align priorities and unblock delivery; wrote concise meeting notes and action items.",
+          "tags": ["stakeholder management", "communication", "leadership", "alignment", "execution"]
+        }
+      ]
+    },
+    {
+      "id": "exp_policy_1",
+      "title": "EXP_POLICY_1",
+      "organization": "Org_PolicyCenter",
+      "dates": "2021-09 to 2022-04",
+      "bullets": [
+        {
+          "id": "b_policy_1_ethics",
+          "text": "Evaluated ethical implications of technology policy decisions involving privacy, bias, and governance.",
+          "tags": ["ethics", "privacy", "bias", "governance", "policy"]
+        },
+        {
+          "id": "b_policy_2_research_write",
+          "text": "Wrote policy briefs with evidence-based recommendations; revised drafts based on reviewer feedback.",
+          "tags": ["writing", "research", "editing", "argumentation", "recommendations"]
+        },
+        {
+          "id": "b_policy_3_presentation",
+          "text": "Presented findings to a mixed audience; answered questions and defended assumptions.",
+          "tags": ["presentation", "public speaking", "critical thinking", "qa", "clarity"]
+        }
+      ]
+    },
+    {
+      "id": "exp_history_1",
+      "title": "EXP_HISTORY_1",
+      "organization": "Org_Archive",
+      "dates": "2020-01 to 2020-12",
+      "bullets": [
+        {
+          "id": "b_hist_1_archival",
+          "text": "Conducted archival research using primary sources; built timelines to contextualize political movements.",
+          "tags": ["history", "archival research", "primary sources", "analysis", "timeline"]
+        },
+        {
+          "id": "b_hist_2_synthesis",
+          "text": "Synthesized sources into a structured narrative; cited evidence and tracked uncertainty in claims.",
+          "tags": ["writing", "synthesis", "citations", "critical analysis", "uncertainty"]
+        }
+      ]
+    },
+    {
+      "id": "exp_art_1",
+      "title": "EXP_ART_1",
+      "organization": "Org_ArtsCollective",
+      "dates": "2021-01 to present",
+      "bullets": [
+        {
+          "id": "b_art_1_exhibit",
+          "text": "Created mixed-media pieces exploring identity and memory; exhibited work in local galleries.",
+          "tags": ["visual arts", "creativity", "design", "storytelling", "exhibition"]
+        },
+        {
+          "id": "b_art_2_event",
+          "text": "Organized community art events, coordinating logistics, promotion, and artist collaboration.",
+          "tags": ["event planning", "coordination", "leadership", "community", "promotion"]
+        },
+        {
+          "id": "b_art_3_branding",
+          "text": "Designed posters and social media assets; iterated based on audience feedback.",
+          "tags": ["graphic design", "branding", "iteration", "feedback", "marketing"]
+        }
+      ]
+    },
+    {
+      "id": "exp_athletics_1",
+      "title": "EXP_ATHLETICS_1",
+      "organization": "Org_Athletics",
+      "dates": "2020-09 to 2023-04",
+      "bullets": [
+        {
+          "id": "b_ath_1_discipline",
+          "text": "Maintained a rigorous training schedule while balancing academic and project commitments.",
+          "tags": ["discipline", "time management", "resilience", "consistency"]
+        },
+        {
+          "id": "b_ath_2_team",
+          "text": "Collaborated with teammates and coaches to refine strategy and improve competitive performance.",
+          "tags": ["teamwork", "communication", "strategy", "coachability"]
         }
       ]
     }
   ],
   "projects": [
     {
-      "id": "proj_1",
-      "name": "Resume Agent",
-      "context": "personal",
+      "id": "proj_tech_1",
+      "name": "PROJ_TECH_1",
+      "context": "Personal",
       "bullets": [
         {
-          "id": "b3",
-          "text": "Designed a C++ pipeline to analyze job postings and generate role-specific resumes.",
-          "tags": ["C++", "data-analysis", "NLP"]
+          "id": "b_proj_tech_1_java",
+          "text": "Built a Java backend service with layered architecture; added structured logging and input validation.",
+          "tags": ["java", "backend", "software design", "logging", "validation"]
+        },
+        {
+          "id": "b_proj_tech_2_db",
+          "text": "Designed a small database schema and wrote queries to support analytics features.",
+          "tags": ["sql", "database", "data modeling", "queries", "analytics"]
+        }
+      ]
+    },
+    {
+      "id": "proj_creative_1",
+      "name": "PROJ_CREATIVE_1",
+      "context": "Creative + Technical",
+      "bullets": [
+        {
+          "id": "b_proj_creative_1_music_ai",
+          "text": "Implemented a model to generate short music clips conditioned on genre; iterated using qualitative listening tests.",
+          "tags": ["artificial intelligence", "creative coding", "music", "deep learning", "evaluation"]
+        },
+        {
+          "id": "b_proj_creative_2_ux",
+          "text": "Built a simple interface to preview outputs and collect user feedback for improvements.",
+          "tags": ["user experience", "iteration", "feedback", "interface", "product thinking"]
+        }
+      ]
+    },
+    {
+      "id": "proj_policy_1",
+      "name": "PROJ_POLICY_1",
+      "context": "Course",
+      "bullets": [
+        {
+          "id": "b_proj_policy_1_cba",
+          "text": "Analyzed policy proposals using cost–benefit analysis and stakeholder mapping.",
+          "tags": ["policy analysis", "cost benefit analysis", "stakeholders", "sustainability", "ethics"]
+        },
+        {
+          "id": "b_proj_policy_2_viz",
+          "text": "Created data visualizations and wrote a brief summarizing key findings and limitations.",
+          "tags": ["data visualization", "writing", "communication", "limitations", "summary"]
+        }
+      ]
+    },
+    {
+      "id": "proj_game_1",
+      "name": "PROJ_GAME_1",
+      "context": "Creative Writing + Game Design",
+      "bullets": [
+        {
+          "id": "b_proj_game_1_story",
+          "text": "Designed branching narrative paths exploring moral choice and consequence; playtested for pacing.",
+          "tags": ["storytelling", "narrative design", "creativity", "playtesting", "pacing"]
+        },
+        {
+          "id": "b_proj_game_2_systems",
+          "text": "Implemented state management and core gameplay systems with clean interfaces.",
+          "tags": ["systems thinking", "software design", "problem solving", "architecture", "state management"]
         }
       ]
     }

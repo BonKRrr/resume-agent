@@ -1,0 +1,972 @@
+{
+  "bullets": [
+    {
+      "bullet_id": "b_tech_1_cpp_perf",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.44,
+          "matched_skill": "c++",
+          "profile_weight": 0.44,
+          "similarity": 1.0,
+          "source": "c++",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.346667,
+          "matched_skill": "performance",
+          "profile_weight": 0.346667,
+          "similarity": 1.0,
+          "source": "performance",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "c++",
+          "weight": 0.44
+        },
+        {
+          "skill": "performance",
+          "weight": 0.346667
+        }
+      ],
+      "parent_id": "exp_tech_1",
+      "parent_title": "EXP_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.32115545791433575,
+        "raw_skill_sum": 0.786667,
+        "tag_count": 5,
+        "total": 0.32115545791433575
+      },
+      "section": "Experience",
+      "tags": [
+        "c++",
+        "performance",
+        "profiling",
+        "memory",
+        "latency"
+      ],
+      "text": "Optimized a C++ service by reducing memory allocations and improving cache locality; cut latency by 25%."
+    },
+    {
+      "bullet_id": "b_proj_tech_1_java",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.393333,
+          "matched_skill": "java",
+          "profile_weight": 0.393333,
+          "similarity": 1.0,
+          "source": "java",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.166667,
+          "matched_skill": "backend",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "backend",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.04177793717759848,
+          "matched_skill": "software design technique",
+          "profile_weight": 0.193667,
+          "similarity": 0.8628818988800049,
+          "source": "software design",
+          "type": "semantic"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "java",
+          "weight": 0.393333
+        },
+        {
+          "skill": "backend",
+          "weight": 0.166667
+        },
+        {
+          "skill": "software design technique",
+          "weight": 0.04177793717759848
+        }
+      ],
+      "parent_id": "proj_tech_1",
+      "parent_title": "PROJ_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.2456748140916246,
+        "raw_skill_sum": 0.6017779371775985,
+        "tag_count": 5,
+        "total": 0.2456748140916246
+      },
+      "section": "Project",
+      "tags": [
+        "java",
+        "backend",
+        "software design",
+        "logging",
+        "validation"
+      ],
+      "text": "Built a Java backend service with layered architecture; added structured logging and input validation."
+    },
+    {
+      "bullet_id": "b_ath_2_team",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.166667,
+          "matched_skill": "teamwork",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "teamwork",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.154667,
+          "matched_skill": "communication",
+          "profile_weight": 0.154667,
+          "similarity": 1.0,
+          "source": "communication",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "teamwork",
+          "weight": 0.166667
+        },
+        {
+          "skill": "communication",
+          "weight": 0.154667
+        }
+      ],
+      "parent_id": "exp_athletics_1",
+      "parent_title": "EXP_ATHLETICS_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.14370493349638347,
+        "raw_skill_sum": 0.321334,
+        "tag_count": 4,
+        "total": 0.14370493349638347
+      },
+      "section": "Experience",
+      "tags": [
+        "teamwork",
+        "communication",
+        "strategy",
+        "coachability"
+      ],
+      "text": "Collaborated with teammates and coaches to refine strategy and improve competitive performance."
+    },
+    {
+      "bullet_id": "b_proj_tech_2_db",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.346667,
+          "matched_skill": "sql",
+          "profile_weight": 0.346667,
+          "similarity": 1.0,
+          "source": "sql",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "sql",
+          "weight": 0.346667
+        }
+      ],
+      "parent_id": "proj_tech_1",
+      "parent_title": "PROJ_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.141526210110236,
+        "raw_skill_sum": 0.346667,
+        "tag_count": 5,
+        "total": 0.141526210110236
+      },
+      "section": "Project",
+      "tags": [
+        "sql",
+        "database",
+        "data modeling",
+        "queries",
+        "analytics"
+      ],
+      "text": "Designed a small database schema and wrote queries to support analytics features."
+    },
+    {
+      "bullet_id": "b_ops_3_stakeholders",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.166667,
+          "matched_skill": "stakeholder management",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "stakeholder management",
+          "type": "exact"
+        },
+        {
+          "contribution": 0.154667,
+          "matched_skill": "communication",
+          "profile_weight": 0.154667,
+          "similarity": 1.0,
+          "source": "communication",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "stakeholder management",
+          "weight": 0.166667
+        },
+        {
+          "skill": "communication",
+          "weight": 0.154667
+        }
+      ],
+      "parent_id": "exp_ops_1",
+      "parent_title": "EXP_OPS_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.13118405616791498,
+        "raw_skill_sum": 0.321334,
+        "tag_count": 5,
+        "total": 0.13118405616791498
+      },
+      "section": "Experience",
+      "tags": [
+        "stakeholder management",
+        "communication",
+        "leadership",
+        "alignment",
+        "execution"
+      ],
+      "text": "Ran stakeholder check-ins to align priorities and unblock delivery; wrote concise meeting notes and action items."
+    },
+    {
+      "bullet_id": "b_tech_2_linux_debug",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.285333,
+          "matched_skill": "linux",
+          "profile_weight": 0.285333,
+          "similarity": 1.0,
+          "source": "linux",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "linux",
+          "weight": 0.285333
+        }
+      ],
+      "parent_id": "exp_tech_1",
+      "parent_title": "EXP_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.11648670946292544,
+        "raw_skill_sum": 0.285333,
+        "tag_count": 5,
+        "total": 0.11648670946292544
+      },
+      "section": "Experience",
+      "tags": [
+        "linux",
+        "debugging",
+        "gdb",
+        "incident response",
+        "observability"
+      ],
+      "text": "Debugged production issues on Linux using logs, core dumps, and gdb; wrote a runbook for incident response."
+    },
+    {
+      "bullet_id": "b_hist_1_archival",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.166667,
+          "matched_skill": "analysis",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "analysis",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "analysis",
+          "weight": 0.166667
+        }
+      ],
+      "parent_id": "exp_history_1",
+      "parent_title": "EXP_HISTORY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.06804151782674067,
+        "raw_skill_sum": 0.166667,
+        "tag_count": 5,
+        "total": 0.06804151782674067
+      },
+      "section": "Experience",
+      "tags": [
+        "history",
+        "archival research",
+        "primary sources",
+        "analysis",
+        "timeline"
+      ],
+      "text": "Conducted archival research using primary sources; built timelines to contextualize political movements."
+    },
+    {
+      "bullet_id": "b_tech_3_api_backend",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.166667,
+          "matched_skill": "backend",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "backend",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "backend",
+          "weight": 0.166667
+        }
+      ],
+      "parent_id": "exp_tech_1",
+      "parent_title": "EXP_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.06804151782674067,
+        "raw_skill_sum": 0.166667,
+        "tag_count": 5,
+        "total": 0.06804151782674067
+      },
+      "section": "Experience",
+      "tags": [
+        "rest api",
+        "backend",
+        "authentication",
+        "http",
+        "json"
+      ],
+      "text": "Built REST APIs with authentication and rate limiting; designed clean request/response schemas."
+    },
+    {
+      "bullet_id": "b_tech_4_testing_ci",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.166667,
+          "matched_skill": "testing",
+          "profile_weight": 0.166667,
+          "similarity": 1.0,
+          "source": "testing",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "testing",
+          "weight": 0.166667
+        }
+      ],
+      "parent_id": "exp_tech_1",
+      "parent_title": "EXP_TECH_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.06804151782674067,
+        "raw_skill_sum": 0.166667,
+        "tag_count": 5,
+        "total": 0.06804151782674067
+      },
+      "section": "Experience",
+      "tags": [
+        "testing",
+        "unit tests",
+        "ci/cd",
+        "quality",
+        "regression testing"
+      ],
+      "text": "Added unit/integration tests and CI checks to prevent regressions; improved test coverage on critical modules."
+    },
+    {
+      "bullet_id": "b_data_2_stats",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.154667,
+          "matched_skill": "communication",
+          "profile_weight": 0.154667,
+          "similarity": 1.0,
+          "source": "communication",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "communication",
+          "weight": 0.154667
+        }
+      ],
+      "parent_id": "exp_data_1",
+      "parent_title": "EXP_DATA_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.06314253834117431,
+        "raw_skill_sum": 0.154667,
+        "tag_count": 5,
+        "total": 0.06314253834117431
+      },
+      "section": "Experience",
+      "tags": [
+        "statistics",
+        "regression",
+        "hypothesis testing",
+        "data visualization",
+        "communication"
+      ],
+      "text": "Performed statistical analysis using regression and hypothesis testing; communicated results with clear visuals."
+    },
+    {
+      "bullet_id": "b_proj_policy_2_viz",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.154667,
+          "matched_skill": "communication",
+          "profile_weight": 0.154667,
+          "similarity": 1.0,
+          "source": "communication",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "communication",
+          "weight": 0.154667
+        }
+      ],
+      "parent_id": "proj_policy_1",
+      "parent_title": "PROJ_POLICY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.06314253834117431,
+        "raw_skill_sum": 0.154667,
+        "tag_count": 5,
+        "total": 0.06314253834117431
+      },
+      "section": "Project",
+      "tags": [
+        "data visualization",
+        "writing",
+        "communication",
+        "limitations",
+        "summary"
+      ],
+      "text": "Created data visualizations and wrote a brief summarizing key findings and limitations."
+    },
+    {
+      "bullet_id": "b_data_1_pipeline",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.142667,
+          "matched_skill": "python",
+          "profile_weight": 0.142667,
+          "similarity": 1.0,
+          "source": "python",
+          "type": "exact"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "python",
+          "weight": 0.142667
+        }
+      ],
+      "parent_id": "exp_data_1",
+      "parent_title": "EXP_DATA_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.058243558855607946,
+        "raw_skill_sum": 0.142667,
+        "tag_count": 5,
+        "total": 0.058243558855607946
+      },
+      "section": "Experience",
+      "tags": [
+        "data pipelines",
+        "etl",
+        "data cleaning",
+        "python",
+        "data validation"
+      ],
+      "text": "Built data pipelines to clean, validate, and transform messy datasets for analysis and reporting."
+    },
+    {
+      "bullet_id": "b_proj_creative_2_ux",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.053409218313902614,
+          "matched_skill": "user experience design",
+          "profile_weight": 0.256667,
+          "similarity": 0.8323503732681274,
+          "source": "user experience",
+          "type": "semantic"
+        },
+        {
+          "contribution": 0.029327503387078645,
+          "matched_skill": "product development",
+          "profile_weight": 0.166667,
+          "similarity": 0.7038586735725403,
+          "source": "product thinking",
+          "type": "semantic"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "user experience design",
+          "weight": 0.053409218313902614
+        },
+        {
+          "skill": "product development",
+          "weight": 0.029327503387078645
+        }
+      ],
+      "parent_id": "proj_creative_1",
+      "parent_title": "PROJ_CREATIVE_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.033777125193009995,
+        "raw_skill_sum": 0.08273672170098126,
+        "tag_count": 5,
+        "total": 0.033777125193009995
+      },
+      "section": "Project",
+      "tags": [
+        "user experience",
+        "iteration",
+        "feedback",
+        "interface",
+        "product thinking"
+      ],
+      "text": "Built a simple interface to preview outputs and collect user feedback for improvements."
+    },
+    {
+      "bullet_id": "b_proj_game_2_systems",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.04177793717759848,
+          "matched_skill": "software design technique",
+          "profile_weight": 0.193667,
+          "similarity": 0.8628818988800049,
+          "source": "software design",
+          "type": "semantic"
+        },
+        {
+          "contribution": 0.03615504182742536,
+          "matched_skill": "scalable architecture",
+          "profile_weight": 0.214667,
+          "similarity": 0.6736953854560852,
+          "source": "architecture",
+          "type": "semantic"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "software design technique",
+          "weight": 0.04177793717759848
+        },
+        {
+          "skill": "scalable architecture",
+          "weight": 0.03615504182742536
+        }
+      ],
+      "parent_id": "proj_game_1",
+      "parent_title": "PROJ_GAME_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.031816005449557115,
+        "raw_skill_sum": 0.07793297900502384,
+        "tag_count": 5,
+        "total": 0.031816005449557115
+      },
+      "section": "Project",
+      "tags": [
+        "systems thinking",
+        "software design",
+        "problem solving",
+        "architecture",
+        "state management"
+      ],
+      "text": "Implemented state management and core gameplay systems with clean interfaces."
+    },
+    {
+      "bullet_id": "b_proj_policy_1_cba",
+      "core_hits": [],
+      "match_evidence": [
+        {
+          "contribution": 0.034244260631665586,
+          "matched_skill": "stakeholder management",
+          "profile_weight": 0.166667,
+          "similarity": 0.8218606114387512,
+          "source": "stakeholders",
+          "type": "semantic"
+        }
+      ],
+      "matched_skills": [
+        {
+          "skill": "stakeholder management",
+          "weight": 0.034244260631665586
+        }
+      ],
+      "parent_id": "proj_policy_1",
+      "parent_title": "PROJ_POLICY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.013980160861076443,
+        "raw_skill_sum": 0.034244260631665586,
+        "tag_count": 5,
+        "total": 0.013980160861076443
+      },
+      "section": "Project",
+      "tags": [
+        "policy analysis",
+        "cost benefit analysis",
+        "stakeholders",
+        "sustainability",
+        "ethics"
+      ],
+      "text": "Analyzed policy proposals using cost–benefit analysis and stakeholder mapping."
+    },
+    {
+      "bullet_id": "b_art_1_exhibit",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_art_1",
+      "parent_title": "EXP_ART_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "visual arts",
+        "creativity",
+        "design",
+        "storytelling",
+        "exhibition"
+      ],
+      "text": "Created mixed-media pieces exploring identity and memory; exhibited work in local galleries."
+    },
+    {
+      "bullet_id": "b_art_2_event",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_art_1",
+      "parent_title": "EXP_ART_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "event planning",
+        "coordination",
+        "leadership",
+        "community",
+        "promotion"
+      ],
+      "text": "Organized community art events, coordinating logistics, promotion, and artist collaboration."
+    },
+    {
+      "bullet_id": "b_art_3_branding",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_art_1",
+      "parent_title": "EXP_ART_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "graphic design",
+        "branding",
+        "iteration",
+        "feedback",
+        "marketing"
+      ],
+      "text": "Designed posters and social media assets; iterated based on audience feedback."
+    },
+    {
+      "bullet_id": "b_ath_1_discipline",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_athletics_1",
+      "parent_title": "EXP_ATHLETICS_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 4,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "discipline",
+        "time management",
+        "resilience",
+        "consistency"
+      ],
+      "text": "Maintained a rigorous training schedule while balancing academic and project commitments."
+    },
+    {
+      "bullet_id": "b_data_3_ml",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_data_1",
+      "parent_title": "EXP_DATA_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "machine learning",
+        "model evaluation",
+        "experimentation",
+        "documentation",
+        "tradeoffs"
+      ],
+      "text": "Trained and evaluated machine learning models; compared baselines and documented tradeoffs."
+    },
+    {
+      "bullet_id": "b_hist_2_synthesis",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_history_1",
+      "parent_title": "EXP_HISTORY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "writing",
+        "synthesis",
+        "citations",
+        "critical analysis",
+        "uncertainty"
+      ],
+      "text": "Synthesized sources into a structured narrative; cited evidence and tracked uncertainty in claims."
+    },
+    {
+      "bullet_id": "b_ops_1_kpi",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_ops_1",
+      "parent_title": "EXP_OPS_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "kpis",
+        "business analytics",
+        "dashboards",
+        "metrics",
+        "decision making"
+      ],
+      "text": "Defined KPIs for acquisition and retention; built weekly dashboards to track trends and anomalies."
+    },
+    {
+      "bullet_id": "b_ops_2_process",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_ops_1",
+      "parent_title": "EXP_OPS_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "operations",
+        "process optimization",
+        "planning",
+        "coordination",
+        "logistics"
+      ],
+      "text": "Designed operational workflows to improve scheduling and resource allocation across teams."
+    },
+    {
+      "bullet_id": "b_policy_1_ethics",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_policy_1",
+      "parent_title": "EXP_POLICY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "ethics",
+        "privacy",
+        "bias",
+        "governance",
+        "policy"
+      ],
+      "text": "Evaluated ethical implications of technology policy decisions involving privacy, bias, and governance."
+    },
+    {
+      "bullet_id": "b_policy_2_research_write",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_policy_1",
+      "parent_title": "EXP_POLICY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "writing",
+        "research",
+        "editing",
+        "argumentation",
+        "recommendations"
+      ],
+      "text": "Wrote policy briefs with evidence-based recommendations; revised drafts based on reviewer feedback."
+    },
+    {
+      "bullet_id": "b_policy_3_presentation",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "exp_policy_1",
+      "parent_title": "EXP_POLICY_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Experience",
+      "tags": [
+        "presentation",
+        "public speaking",
+        "critical thinking",
+        "qa",
+        "clarity"
+      ],
+      "text": "Presented findings to a mixed audience; answered questions and defended assumptions."
+    },
+    {
+      "bullet_id": "b_proj_creative_1_music_ai",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "proj_creative_1",
+      "parent_title": "PROJ_CREATIVE_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Project",
+      "tags": [
+        "artificial intelligence",
+        "creative coding",
+        "music",
+        "deep learning",
+        "evaluation"
+      ],
+      "text": "Implemented a model to generate short music clips conditioned on genre; iterated using qualitative listening tests."
+    },
+    {
+      "bullet_id": "b_proj_game_1_story",
+      "core_hits": [],
+      "match_evidence": [],
+      "matched_skills": [],
+      "parent_id": "proj_game_1",
+      "parent_title": "PROJ_GAME_1",
+      "score": {
+        "core_bonus": 0.0,
+        "normalized_skill": 0.0,
+        "raw_skill_sum": 0.0,
+        "tag_count": 5,
+        "total": 0.0
+      },
+      "section": "Project",
+      "tags": [
+        "storytelling",
+        "narrative design",
+        "creativity",
+        "playtesting",
+        "pacing"
+      ],
+      "text": "Designed branching narrative paths exploring moral choice and consequence; playtested for pacing."
+    }
+  ],
+  "num_bullets": 28,
+  "profile_path": "out_test/profile.json",
+  "resume_path": "data/test_resume.json",
+  "role": "C++ Backend Developer"
+}
