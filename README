@@ -1,0 +1,263 @@
+Resume Agent — Deterministic Resume Generation in C++
+Overview
+
+Resume Agent is a deterministic, explainable C++ system that generates role-specific resumes from a structured resume and a corpus of job postings.
+
+Given a job title (e.g. “C++ Backend Developer”), the system:
+
+Aggregates and analyzes many job postings
+
+Builds a weighted role skill profile
+
+Scores resume bullets against that profile (lexical + semantic)
+
+Selects bullets under explicit constraints
+
+Validates the result and retries deterministically if needed
+
+The result is a reproducible, auditable resume, not a black-box LLM rewrite.
+
+Why this exists
+
+Most “AI resume tools” are:
+
+non-deterministic
+
+hard to debug
+
+impossible to explain
+
+prone to hallucination
+
+This project intentionally takes the opposite approach:
+
+Deterministic: same inputs → same outputs
+
+Explainable: every bullet has score evidence
+
+Validated: hard constraints are enforced
+
+Composable: analysis, scoring, selection are separate stages
+
+LLMs are used only for extraction, never for generation.
+
+Quickstart
+1) Build embeddings once
+resume-agent embed
+
+2) Generate a resume for a role
+resume-agent run \
+  --role "C++ Backend Developer" \
+  --resume data/test_resume.json \
+  --outdir out
+
+3) Outputs
+out/
+├─ profile.json               # aggregated role skill profile
+├─ mentions.jsonl             # evidence from job postings
+├─ bullet_scores.json         # per-bullet scoring details
+├─ resume.md                  # final resume
+├─ explainability.json        # selection + scoring rationale
+├─ validation_report.json     # constraint validation result
+├─ run_attempts.jsonl         # agent retry log
+└─ run_manifest.json          # reproducibility manifest
+
+How the system works
+High-level pipeline
+Job Postings ──▶ Analyze ──▶ Role Profile
+                               │
+Abstract Resume ──▶ Score ──────┘
+                       │
+                   Select
+                       │
+                   Validate
+                       │
+                    Retry
+                       │
+                  resume.md
+
+Key stages
+1. Analyze (Job Corpus → Role Profile)
+
+Ingests many job postings for a given role
+
+Extracts skill mentions (regex + optional LLM)
+
+Canonicalizes and weights skills by frequency and strength
+
+Produces profile.json with:
+
+core / secondary / nice-to-have skills
+
+continuous skill weights
+
+evidence trails
+
+2. Score (Resume → Bullet Scores)
+
+Scores each resume bullet against the role profile
+
+Uses:
+
+exact lexical matches
+
+optional semantic similarity (MiniLM)
+
+Produces normalized, comparable bullet scores
+
+3. Select (Constraint-aware)
+
+Selects bullets under explicit constraints:
+
+max total bullets
+
+per-section caps
+
+per-parent caps
+
+minimum unique parents
+
+Produces a concrete resume structure
+
+4. Validate
+
+Enforces correctness:
+
+selected bullets exist in resume
+
+no duplicates
+
+constraints respected
+
+Writes a structured validation report
+
+5. Agent Loop (Deterministic Retry)
+
+If validation fails:
+
+relaxes constraints in a fixed order
+
+retries build + validate
+
+Logs all attempts for auditability
+
+Code structure
+
+The codebase is intentionally modular and layered.
+
+app/
+
+CLI entrypoint
+
+main.cpp
+Dispatches subcommands (run, analyze, build, embed).
+
+commands/
+
+Command-level orchestration
+
+run.cpp
+End-to-end agent: analyze → build → validate → retry → manifest
+
+analyze.cpp
+Job corpus ingestion and role profile generation
+
+build.cpp
+Resume scoring, selection, and rendering
+
+embed.cpp
+Offline embedding generation
+
+resumeDump.cpp
+Debug / inspection utilities
+
+Commands are thin: they parse flags and call core logic.
+
+resume/
+
+Core resume intelligence
+
+Scorer.*
+Bullet → numeric relevance scoring
+
+SemanticMatcher.*
+Semantic skill matching (MiniLM)
+
+Selector.*
+Constraint-aware bullet selection
+
+Validator.*
+Hard correctness enforcement
+
+MarkdownRenderer.*
+Final resume formatting
+
+*Artifact.*
+Structured output files (scores, explainability, validation)
+
+This layer is deterministic and testable.
+
+jobs/
+
+Job posting analysis
+
+JobCorpus.*
+Loads and normalizes postings
+
+RequirementExtractor.*
+Extracts skills without LLMs
+
+EmbeddingIndex.*
+Fast similarity search for postings
+
+TextUtil.*
+Tokenization and normalization helpers
+
+emb/
+
+Embedding infrastructure
+
+MiniLmEmbedder.*
+ONNX-based MiniLM inference
+
+WordPieceTokenizer.*
+
+llm/
+
+LLM adapters (optional, isolated)
+
+OllamaLLMClient.*
+
+MockLLMClient.*
+
+LLMClient.* (interface)
+
+LLMs are only used for extraction, never for generation.
+
+Design principles
+
+Deterministic by default
+
+Explainability over cleverness
+
+Validation before output
+
+LLMs as tools, not decision-makers
+
+Artifacts over logs
+
+Every output file exists so you can answer:
+
+“Why is this bullet here?”
+
+Example use cases
+
+Generate different resumes for different roles
+
+Compare how role profiles differ across job titles
+
+Debug resume weaknesses using score breakdowns
+
+License / Status
+
+Personal engineering project.
