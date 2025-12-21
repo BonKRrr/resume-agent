@@ -6,6 +6,7 @@
 #include "resume/SemanticMatcher.hpp"
 #include "resume/Selector.hpp"
 #include "resume/MarkdownRenderer.hpp"
+#include "resume/HtmlRenderer.hpp"
 #include "resume/ExplainabilityArtifact.hpp"
 #include "resume/Models.hpp"
 
@@ -250,6 +251,11 @@ int cmd_build(int argc, char** argv) {
         const fs::path resume_md_path = outdir / "resume.md";
         resume::write_markdown(resume_md_path, md);
 
+        // NEW: HTML for copy/paste into Google Docs
+        const std::string html = resume::render_html_from_markdown(md);
+        const fs::path resume_html_path = outdir / "resume.html";
+        resume::write_html(resume_html_path, html);
+
         // write explainability.json
         resume::ExplainabilityArtifact ex;
         ex.role = effective_role;
@@ -264,6 +270,7 @@ int cmd_build(int argc, char** argv) {
         ex.write_to(explain_path);
 
         std::cout << "OUT_RESUME_MD: " << resume_md_path.string() << "\n";
+        std::cout << "OUT_RESUME_HTML: " << resume_html_path.string() << "\n";
         std::cout << "OUT_EXPLAIN: " << explain_path.string() << "\n";
         std::cout << "SELECTED: " << sel.selected.size() << "\n";
 

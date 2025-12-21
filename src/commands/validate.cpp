@@ -30,7 +30,7 @@ static int validate_usage() {
 }
 
 int cmd_validate(int argc, char** argv) {
-    (void)has_flag;
+    // (void)has_flag;
 
     const std::string resume_path = get_arg(argc, argv, "--resume", "");
     const std::string outdir      = get_arg(argc, argv, "--outdir", "out");

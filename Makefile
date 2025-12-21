@@ -24,6 +24,7 @@ RESUME_SRC := \
 	src\resume\SemanticMatcher.cpp \
 	src\resume\Selector.cpp \
 	src\resume\MarkdownRenderer.cpp \
+	src\resume\HtmlRenderer.cpp \
 	src\resume\ExplainabilityArtifact.cpp \
 	src\resume\Validator.cpp
 
@@ -45,7 +46,14 @@ LLM_SRC := \
 	src\llm\MockLLMClient.cpp \
 	src\llm\OllamaLLMClient.cpp
 
-SRCS := $(APP_SRC) $(CMD_SRC) $(RESUME_SRC) $(IO_SRC) $(JOBS_SRC) $(EMB_SRC) $(LLM_SRC)
+SRCS := \
+	$(APP_SRC) \
+	$(CMD_SRC) \
+	$(RESUME_SRC) \
+	$(IO_SRC) \
+	$(JOBS_SRC) \
+	$(EMB_SRC) \
+	$(LLM_SRC)
 
 all:
 	call $(VCVARS) && $(CXX) $(CXXFLAGS) $(SRCS) /Fe:$(TARGET) $(LDFLAGS)

@@ -54,6 +54,19 @@ static nlohmann::json args_to_json_array(const std::vector<std::string>& args) {
     return a;
 }
 
+static bool profile_role_matches(const fs::path& profile_path, const std::string& wanted_role) {
+    try {
+        std::ifstream in(profile_path);
+        if (!in) return false;
+        nlohmann::json j;
+        in >> j;
+        const std::string got = j.value("role", "");
+        return got == wanted_role;
+    } catch (...) {
+        return false;
+    }
+}
+
 int cmd_run(int argc, char** argv) {
     std::string role;
     std::string resume_path;
@@ -113,7 +126,8 @@ int cmd_run(int argc, char** argv) {
 
     const fs::path outdir_p(outdir);
 
-    const std::string profile_path = (outdir_p / "profile.json").string();
+    const fs::path profile_p = outdir_p / "profile.json";
+    const std::string profile_path = profile_p.string();
     const std::string llm_cache_dir = (outdir_p / "llm_cache").string();
     const std::string semantic_cache_path = (outdir_p / "profile_skill_index.bin").string();
 
@@ -121,6 +135,13 @@ int cmd_run(int argc, char** argv) {
     const fs::path report_path  = outdir_p / "validation_report.json";
     const fs::path attempts_path = outdir_p / "run_attempts.jsonl";
     const fs::path manifest_path = outdir_p / "run_manifest.json";
+
+    // ------------------------------------------------------------
+    // IMPORTANT: avoid stale outputs from a previous run
+    // ------------------------------------------------------------
+    try { fs::remove(profile_p); } catch (...) {}
+    try { fs::remove(outdir_p / "mentions.jsonl"); } catch (...) {}
+    // We intentionally do NOT delete resume.md/html etc. because attempts will overwrite.
 
     // -------------------------
     // 1) ANALYZE (always)
@@ -142,30 +163,40 @@ int cmd_run(int argc, char** argv) {
         if (rc != 0) return rc;
     }
 
-    if (!fs::exists(profile_path)) {
+    if (!fs::exists(profile_p)) {
         std::cerr << "error: analyze did not produce expected profile: " << profile_path << "\n";
+        std::cerr << "hint: likely KEPT=0 for this role against your job corpus\n";
+        return 2;
+    }
+
+    if (!profile_role_matches(profile_p, role)) {
+        std::cerr << "error: produced profile role mismatch (stale or invalid)\n";
+        std::cerr << "  wanted: " << role << "\n";
+        try {
+            std::ifstream in(profile_p);
+            nlohmann::json j; in >> j;
+            std::cerr << "  got:    " << j.value("role", "") << "\n";
+        } catch (...) {
+            std::cerr << "  got:    (unreadable profile)\n";
+        }
+        std::cerr << "hint: analyze likely produced no usable postings (KEPT=0)\n";
         return 2;
     }
 
     // -------------------------
     // 2) BUILD+VALIDATE (agent loop)
     // -------------------------
-    // Deterministic retry schedule.
-    // Attempt 1: base
-    // Attempt 2: relax bullet caps slightly
-    // Attempt 3: relax semantic threshold slightly
-    // Attempt 4: relax per-parent slightly
     struct BuildTweak {
-        int max_total_bullets = -1;        // -1 means don't pass flag
+        int max_total_bullets = -1;
         int max_experience_bullets = -1;
         int max_project_bullets = -1;
         int max_bullets_per_parent = -1;
-        double semantic_threshold = -1.0;  // -1 means don't pass flag
+        double semantic_threshold = -1.0;
     };
 
     std::vector<BuildTweak> plan;
     {
-        BuildTweak t1; // baseline: no extra flags
+        BuildTweak t1;
         plan.push_back(t1);
 
         BuildTweak t2;
@@ -273,6 +304,7 @@ int cmd_run(int argc, char** argv) {
         {"mentions_jsonl", (outdir_p / "mentions.jsonl").string()},
         {"bullet_scores_json", (outdir_p / "bullet_scores.json").string()},
         {"resume_md", (outdir_p / "resume.md").string()},
+        {"resume_html", (outdir_p / "resume.html").string()},
         {"explainability_json", explain_path.string()},
         {"validation_report_json", report_path.string()},
         {"run_attempts_jsonl", attempts_path.string()},
