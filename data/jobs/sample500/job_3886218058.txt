@@ -1,0 +1,4 @@
+Title: Java-Big Data Architect
+Experience Level: Mid-Senior level
+Work Type: Contract
+Description: W2 CONTRACT ONLY - NO C2CUNABLE TO WORK WITH 3RD PARTY VENDORS OR VISA CANDIDATES JavaGCP DataflowApache HadoopBig data ArchitectBigQueryApache Spark Architect an end-to-end integration solution. Selecting integration technology components and patterns, and designing the integration architecture. Java, Big data Architect, Spark, ETL, Apache Beam/DataFVery strong Java knowledge building frameworks/modules.Strong knowledge in Spring Boot.Preferred GCP Data services Experience as requested below, if not should have, strong Hadoop, Java Spark experience or similar data services in AWS.GCP Data Experience Big Query, Looker, Data Flow, Data Fusion, Cloud Big Table, Cloud SQL, Cloud Dataproc.Hands-on programming experience in Apache Spark using Java/Scala and Spark StreamingExposure to Google DLP API, Cloud Composer, Apache Nifi. Share resume at nagesh@brixton.net
