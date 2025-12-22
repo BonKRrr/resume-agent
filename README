@@ -43,7 +43,7 @@ LLMs are used only for extraction, never for generation.
 
 Quickstart
 1) Build embeddings once
-resume-agent embed
+resume-agent embed --jobs data/jobs/raw --out data/embeddings/jobs.bin
 
 2) Generate a resume for a role
 resume-agent run \

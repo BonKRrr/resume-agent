@@ -12,6 +12,8 @@ out/
 out_llm_cache/
 out_sem/
 out_test/
+data/jobs/
 .vscode/
 .DS_Store
 thumbs.db
+postings.csv

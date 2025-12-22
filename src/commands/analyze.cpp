@@ -524,12 +524,12 @@ static bool title_has_conflicting_lang(const std::unordered_set<std::string>& ti
 
 int cmd_analyze(int argc, char** argv) {
     std::string role         = get_arg(argc, argv, "--role", "");
-    std::string jobs_dir     = get_arg(argc, argv, "--jobs", "data/jobs/raw");
-    std::string topk_s       = get_arg(argc, argv, "--topk", "15"); // default changed to 15
+    std::string jobs_dir     = get_arg(argc, argv, "--jobs", "data/jobs/sample500");
+    std::string topk_s       = get_arg(argc, argv, "--topk", "10"); // default changed to 15
 
     // LLM args
     std::string llm_mock_dir = get_arg(argc, argv, "--llm_mock", "");
-    std::string llm_model    = get_arg(argc, argv, "--llm_model", "llama3.1:8b");
+    std::string llm_model    = get_arg(argc, argv, "--llm_model", "llama3.2:3b");
     std::string llm_cache    = get_arg(argc, argv, "--llm_cache", "out/llm_cache");
 
     std::string emb_path     = get_arg(argc, argv, "--emb", "data/embeddings/jobs.bin");
